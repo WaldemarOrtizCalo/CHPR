@@ -37,3 +37,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Ignoring Data
+1.Data/
+
+# Ignoring Outputs
+3.Outputs/
