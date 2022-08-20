@@ -24,39 +24,35 @@ roads <- read_sf("1.Data\\data_raw\\Roads\\rds2000.shp")
 publiclands <- read_sf("1.Data/data_raw/MontanaCadestral/Montana_Cadastral/OWNERPARCEL.shp")
 counties <- read_sf("1.Data\\data_raw\\MontanaCounties\\county.shp")
 
+
+targetProj <- 4326 # Target projection. WGS 84 
 ###############################################################################
 #   [Road Data]                                                             ####
 #      [Data Import]                                                        ####
 
 # Data Import
-roads <- read_sf("1.Data\\data_raw\\Roads\\rds2000.shp")
+layer <- read_sf("1.Data\\data_raw\\Roads\\rds2000.shp")
 
 #      [Projection Transformation]                                          ####
 
 # Checking Projection
-st_crs(roads)
+st_crs(layer)
 
 # Changing Projection
-roads <- st_transform(roads, crs = 4326)
+layer <- st_transform(layer, crs = targetProj)
 
 #      [Data Export]                                                        ####
-st_write(obj = roads,
+
+# Export Script
+st_write(obj = layer,
          dsn = "1.Data\\data_clean\\RoadLayer\\MontanaRoads.shp")
 
-#      [Cleaning Environment]                                               ####
+#      [Cleaning Environment and Memory]                                    ####
 
-rm(list = ls())
+# Cleaning Environment
+rm(layer) 
+
+# Cleaning RAM 
+gc()
+
 ###############################################################################
-
-p <- publiclands[1:10,] %>% st_transform(crs = 4326)
-c <- counties[1,] %>% st_transform(crs = st_crs(p))
-
-mapview(p)
-
-t <- st_intersection(p,c)
-
-
-m <- subset(publiclands, CountyName == "Missoula")
-
-
-mapview(m)
