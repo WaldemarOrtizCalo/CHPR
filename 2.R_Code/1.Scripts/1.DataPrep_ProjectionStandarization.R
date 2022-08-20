@@ -5,7 +5,7 @@
 # Date:2022-07-30 
 
 # Purpose: This script is meant to import all of the raw data and transform it
-# to a standarized format which is WGS 84 long-lat. 
+# to a standardized projection system which is WGS 84 long-lat. 
 
 ###############################################################################
 #   Library / Functions / Data                                              ####
