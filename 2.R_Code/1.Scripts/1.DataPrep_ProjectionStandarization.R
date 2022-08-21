@@ -128,17 +128,47 @@ st_crs(layer)
 # Changing Projection
 layer <- st_transform(layer, crs = targetProj)
 
+#      [Subsetting Important Parcel Types]                                  ####
+
+# Listing Unique Parcel Types
+names(layer)
+unique(layer$PropType)
+unique(layer$OwnerName)
 #      [Data Export]                                                        ####
 
-# Export Script
-st_write(obj = layer,
+# Creating a list of unique Counties
+CountyNames <- unique(layer$CountyName)
+
+#        [All Data Export]                                                  ####
+
+st_write(obj = subset(layer, layer$CountyName == CountyNames[i]),
          dsn = "1.Data\\data_clean\\MontanaCadastral\\MontanaCadastral_ParcelOwnership.shp",
          append = FALSE)
+
+#        [County export]                                                    ####
+
+# For Loop to do a per 
+
+for (i in 1:length(CountyNames)) {
+  
+  # Export Script
+  st_write(obj = subset(layer, layer$CountyName == CountyNames[i]),
+           dsn = paste0("1.Data\\data_clean\\MontanaCadastral\\CountyBasedSubset\\MontanaCadastral_",
+                        CountyNames[i],
+                        ".shp"),
+           append = FALSE)
+  
+  # Iterator Tracker
+  print(i)
+}
+
 
 #      [Cleaning Environment and Memory]                                    ####
 
 # Cleaning Environment
 rm(layer) 
+rm(i) 
+rm(CountyNames)
 
 # Cleaning RAM 
 gc()
