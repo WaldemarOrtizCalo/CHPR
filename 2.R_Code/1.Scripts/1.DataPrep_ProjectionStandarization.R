@@ -17,15 +17,10 @@ library(tidyverse)
 
 #      Functions                                                            ####
 
-#      Data                                                                 ####
-
-# Road Layer
-roads <- read_sf("1.Data\\data_raw\\Roads\\rds2000.shp")
-publiclands <- read_sf("1.Data/data_raw/MontanaCadestral/Montana_Cadastral/OWNERPARCEL.shp")
-counties <- read_sf("1.Data\\data_raw\\MontanaCounties\\county.shp")
-
+#      Standardization Values                                               ####
 
 targetProj <- 4326 # Target projection. WGS 84 
+
 ###############################################################################
 #   [Road Data]                                                             ####
 #      [Data Import]                                                        ####
@@ -45,7 +40,100 @@ layer <- st_transform(layer, crs = targetProj)
 
 # Export Script
 st_write(obj = layer,
-         dsn = "1.Data\\data_clean\\RoadLayer\\MontanaRoads.shp")
+         dsn = "1.Data\\data_clean\\RoadLayer\\MontanaRoads.shp",
+         append = FALSE)
+
+#      [Cleaning Environment and Memory]                                    ####
+
+# Cleaning Environment
+rm(layer) 
+
+# Cleaning RAM 
+gc()
+
+###############################################################################
+#   [Montana County Boundaries]                                             ####
+#      [Data Import]                                                        ####
+
+# Data Import
+layer <- read_sf("1.Data\\data_raw\\MontanaCounties\\county.shp")
+
+#      [Projection Transformation]                                          ####
+
+# Checking Projection
+st_crs(layer)
+
+# Changing Projection
+layer <- st_transform(layer, crs = targetProj)
+
+#      [Data Export]                                                        ####
+
+# Export Script
+st_write(obj = layer,
+         dsn = "1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp",
+         append = FALSE)
+
+#      [Cleaning Environment and Memory]                                    ####
+
+# Cleaning Environment
+rm(layer) 
+
+# Cleaning RAM 
+gc()
+
+###############################################################################
+#   [Montana Protected Areas]                                               ####
+#      [Data Import]                                                        ####
+
+# Data Import
+layer <- read_sf("1.Data\\data_raw\\MontanaCounties\\county.shp")
+
+#      [Projection Transformation]                                          ####
+
+# Checking Projection
+st_crs(layer)
+
+# Changing Projection
+layer <- st_transform(layer, crs = targetProj)
+
+#      [Data Export]                                                        ####
+
+# Export Script
+st_write(obj = layer,
+         dsn = "1.Data\\data_clean\\Montana_ProtectedAreas\\Montana_ProtectedAreas.shp",
+         append = FALSE)
+
+#      [Cleaning Environment and Memory]                                    ####
+
+# Cleaning Environment
+rm(layer) 
+
+# Cleaning RAM 
+gc()
+
+###############################################################################
+################## NEEDS DEVELOPMENT/SUBSETTING ###############################
+###############################################################################
+#   [Montana Cadastral Data - Needs Subsetting portion]                     ####
+#      [Data Import]                                                        ####
+
+# Data Import
+layer <- read_sf("1.Data\\data_raw\\MontanaCadastral\\Montana_Cadastral\\OWNERPARCEL.shp")
+
+#      [Projection Transformation]                                          ####
+
+# Checking Projection
+st_crs(layer)
+
+# Changing Projection
+layer <- st_transform(layer, crs = targetProj)
+
+#      [Data Export]                                                        ####
+
+# Export Script
+st_write(obj = layer,
+         dsn = "1.Data\\data_clean\\MontanaCadastral\\MontanaCadastral_ParcelOwnership.shp",
+         append = FALSE)
 
 #      [Cleaning Environment and Memory]                                    ####
 
