@@ -43,3 +43,7 @@ vignettes/*.pdf
 
 # Ignoring Outputs
 3.Outputs/
+
+# Ignoring RMD and html files
+*.Rmd
+*.html
