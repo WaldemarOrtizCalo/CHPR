@@ -86,7 +86,7 @@ gc()
 #      [Data Import]                                                        ####
 
 # Data Import
-layer <- read_sf("1.Data\\data_raw\\MontanaCounties\\county.shp")
+layer <- read_sf("1.Data\\data_raw\\PAD_MT_ProtectedAreas\\PADUS3_0Combined_StateMT.shp")
 
 #      [Projection Transformation]                                          ####
 
@@ -95,6 +95,30 @@ st_crs(layer)
 
 # Changing Projection
 layer <- st_transform(layer, crs = targetProj)
+
+#      [Data Subsetting]                                                    ####
+
+layer <- layer %>% filter(d_Des_Tp %in% c("Research or Educational Area",
+                                          "National Public Lands",
+                                          "Recreation Management Area",
+                                          "National Forest",
+                                          "National Grassland",
+                                          "Historic or Cultural Area",
+                                          "National Monument",
+                                          "National Park",
+                                          "National Recreation Area",
+                                          "National Wildlife Refuge",
+                                          "State Park",
+                                          "Local Conservation Area",
+                                          "State Conservation Area",
+                                          "State Recreation Area", 
+                                          "State Resource Management Area",
+                                          "State Wilderness",
+                                          "Conservation Area",
+                                          "National Scenic or Historic Trail",
+                                          "National Scenic, Botanical or Volcanic Area",
+                                          "Wilderness Area"
+                                          ))
 
 #      [Data Export]                                                        ####
 
@@ -112,9 +136,7 @@ rm(layer)
 gc()
 
 ###############################################################################
-################## NEEDS DEVELOPMENT/SUBSETTING ###############################
-###############################################################################
-#   [Montana Cadastral Data - Needs Subsetting portion]                     ####
+#   [Montana Cadastral Data]                                                ####
 #      [Data Import]                                                        ####
 
 # Data Import
@@ -131,9 +153,18 @@ layer <- st_transform(layer, crs = targetProj)
 #      [Subsetting Important Parcel Types]                                  ####
 
 # Listing Unique Parcel Types
-names(layer)
 unique(layer$PropType)
-unique(layer$OwnerName)
+
+# Subsetting Parcels of Interest
+layer <- layer %>% filter(PropType %in% c("EP - Exempt Property",
+                                 "VAC_R - Vacant Land - Rural",
+                                 "VAC_U - Vacant Land - Urban",
+                                 "GOLF - Golf Course",
+                                 "MINE - Mining Claim",
+                                 "TP - Tribal Property",
+                                 "MC - Mining Claim",
+                                 "VU - Vacant Land Urban"))
+
 #      [Data Export]                                                        ####
 
 # Creating a list of unique Counties
@@ -141,7 +172,7 @@ CountyNames <- unique(layer$CountyName)
 
 #        [All Data Export]                                                  ####
 
-st_write(obj = subset(layer, layer$CountyName == CountyNames[i]),
+st_write(obj = layer,
          dsn = "1.Data\\data_clean\\MontanaCadastral\\MontanaCadastral_ParcelOwnership.shp",
          append = FALSE)
 
