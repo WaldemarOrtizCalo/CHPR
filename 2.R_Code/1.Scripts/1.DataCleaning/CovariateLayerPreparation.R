@@ -33,8 +33,17 @@ layer <- read_sf("1.Data\\data_raw\\Roads\\rds2000.shp")
 # Checking Projection
 st_crs(layer)
 
+
 # Changing Projection
 layer <- st_transform(layer, crs = targetProj)
+#      [Data Subsetting]                                                    ####
+
+layer <- layer %>% filter(ROADCLASS %in% c("Local road or city street",
+                                           "Driveway or service road",
+                                           "State and secondary highway",
+                                           "US highway without limited access",
+                                           "Driveway or service roadl"))
+
 
 #      [Data Export]                                                        ####
 
@@ -117,7 +126,12 @@ layer <- layer %>% filter(d_Des_Tp %in% c("Research or Educational Area",
                                           "Conservation Area",
                                           "National Scenic or Historic Trail",
                                           "National Scenic, Botanical or Volcanic Area",
-                                          "Wilderness Area"
+                                          "Wilderness Area",
+                                          "Wild and Scenic River",
+                                          "Local Park",
+                                          "Local Recreation Area",
+                                          "Inventoried Roadless Area",
+                                          "Wilderness Study Area"
                                           ))
 
 #      [Data Export]                                                        ####
