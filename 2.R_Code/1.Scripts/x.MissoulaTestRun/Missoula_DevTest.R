@@ -38,17 +38,8 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
   filter(CountyName == "Missoula")
 
 ###############################################################################
-#   [Making leaflet maps]                                                   ####
-#      [Cadastral Map]                                                      ####
+#   Creating a Road Buffer Layer                                            ####
 
-cad_map <- mapview(missoula_cadastral,layer.name = "Missoula Cadastral", 
-                   color = "#E06E72",
-                   col.regions = "#E06E72") +
-  mapview(missoula_boundary,layer.name = "Missoula", 
-          color = "royalblue2",
-          col.regions = "royalblue2",
-          alpha.regions = 0.1, aplha = 1) 
+roads_buffered <- missoula_roads %>% st_buffer(50)
 
-cad_map %>% 
-  mapshot(url = "D:/Drive/Research/CPHR/CPHR_Workspace/2.R_Code/4.LeafletMaps/CadastralMap.html")
 
