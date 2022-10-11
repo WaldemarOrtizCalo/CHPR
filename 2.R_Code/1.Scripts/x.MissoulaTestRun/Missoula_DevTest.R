@@ -38,8 +38,44 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
   filter(CountyName == "Missoula")
 
 ###############################################################################
-#   Creating a Road Buffer Layer                                            ####
+#  Road Buffer Layer                                                        ####
 
+# Creating a 50m buffer 
 roads_buffered <- missoula_roads %>% st_buffer(50)
 
+# Exporting
+st_write(obj = roads_buffered,
+         dsn = "1.Data/data_clean/RoadLayer/road_buffers.shp",
+         append = F)
 
+###############################################################################
+#   [Exporting Maps]                                                        ####
+
+# Road and Road Buffer
+map_road <- ggplot() +
+  geom_sf(data = missoula_boundary,color = "black",size = 1) +
+  geom_sf(data = missoula_roads)+
+  theme_bw()
+
+
+ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_roads.png",
+       plot = map_road,
+       device = "png",
+       width = 8,
+       height = 6, 
+       units = "in")
+
+map_bufferedroads <- ggplot() +
+  geom_sf(data = missoula_boundary,color = "black",size = 1) +
+  geom_sf(data = roads_buffered)+
+  theme_bw()
+
+
+ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
+       plot = map_bufferedroads,
+       device = "png",
+       width = 8,
+       height = 6, 
+       units = "in")
+
+###############################################################################
