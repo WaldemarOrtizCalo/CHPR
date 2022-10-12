@@ -38,7 +38,9 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
   filter(CountyName == "Missoula")
 
 ###############################################################################
-#  Road Buffer Layer                                                        ####
+#  Road Buffer Layer Creation and Export                                    ####
+
+#      Creating Buffered Layer                                              ####
 
 # Creating a 50m buffer 
 roads_buffered <- missoula_roads %>% st_buffer(50)
@@ -48,10 +50,8 @@ st_write(obj = roads_buffered,
          dsn = "1.Data/data_clean/RoadLayer/road_buffers.shp",
          append = F)
 
-###############################################################################
-#   [Exporting Maps]                                                        ####
+#      Creating and Exporting Maps                                          ####
 
-# Road and Road Buffer
 map_road <- ggplot() +
   geom_sf(data = missoula_boundary,color = "black",size = 1) +
   geom_sf(data = missoula_roads)+
@@ -77,5 +77,30 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
        width = 8,
        height = 6, 
        units = "in")
+
+
+###############################################################################
+#   Protected Area Cleaning                                                 ####
+
+#      [Making Maps of Protected Areas]                                     ####
+map_GAPstatus <- ggplot(protected_areas)+
+  geom_sf(data = missoula_boundary) +
+  geom_sf(fill = "#458B00") +
+  facet_wrap(~ GAP_Sts)+
+  theme_bw()+
+  ggtitle("Protected Areas by GAP status")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
+
+ggsave(filename = "3.Outputs/MissoulaDevTest/maps/protected_areas.png",
+       plot = map_GAPstatus,
+       device = "png",
+       width = 12,
+       height = 6, 
+       units = "in")
+
+###############################################################################
+#  Exporting Maps                                                           ####
+
 
 ###############################################################################
