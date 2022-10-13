@@ -81,8 +81,8 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
 
 ###############################################################################
 #   Protected Area Cleaning                                                 ####
-
 #      [Making Maps of Protected Areas]                                     ####
+
 map_GAPstatus <- ggplot(protected_areas)+
   geom_sf(data = missoula_boundary) +
   geom_sf(fill = "#458B00") +
@@ -99,6 +99,14 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/protected_areas.png",
        height = 6, 
        units = "in")
 
+#      [Eliminating Overlapping Statuses]                                   ####
+mapview(filter(protected_areas,GAP_Sts == "3")[-7,],col.regions = "red") +
+  mapview(filter(protected_areas,GAP_Sts == "2"))
+  
+mapview(filter(protected_areas,GAP_Sts == "3")[7,],col.regions = "red")+
+  mapview(filter(protected_areas,GAP_Sts == "3"),col.regions = "red")
+
+v <- filter(protected_areas,GAP_Sts == "3")[7,]
 ###############################################################################
 #  Exporting Maps                                                           ####
 
