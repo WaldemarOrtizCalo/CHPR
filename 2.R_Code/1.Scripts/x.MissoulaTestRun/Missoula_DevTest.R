@@ -57,7 +57,6 @@ map_road <- ggplot() +
   geom_sf(data = missoula_roads)+
   theme_bw()
 
-
 ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_roads.png",
        plot = map_road,
        device = "png",
@@ -70,7 +69,6 @@ map_bufferedroads <- ggplot() +
   geom_sf(data = roads_buffered)+
   theme_bw()
 
-
 ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
        plot = map_bufferedroads,
        device = "png",
@@ -81,7 +79,7 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
 
 ###############################################################################
 #   Protected Area Cleaning                                                 ####
-#      [Making Maps of Protected Areas]                                     ####
+#       Making Maps of Protected Areas                                      ####
 
 map_GAPstatus <- ggplot(protected_areas)+
   geom_sf(data = missoula_boundary) +
@@ -99,14 +97,24 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/protected_areas.png",
        height = 6, 
        units = "in")
 
-#      [Eliminating Overlapping Statuses]                                   ####
-mapview(filter(protected_areas,GAP_Sts == "3")[-7,],col.regions = "red") +
-  mapview(filter(protected_areas,GAP_Sts == "2"))
-  
-mapview(filter(protected_areas,GAP_Sts == "3")[7,],col.regions = "red")+
-  mapview(filter(protected_areas,GAP_Sts == "3"),col.regions = "red")
+#       Eliminating Overlapping Statuses                                    ####
 
-v <- filter(protected_areas,GAP_Sts == "3")[7,]
+
+base1 <- protected_areas %>%  filter(GAP_Sts == "1") 
+base2 <- protected_areas %>%  filter(GAP_Sts == "2")
+base3 <- protected_areas %>%  filter(GAP_Sts == "3")
+base4 <- protected_areas %>%  filter(GAP_Sts == "4")
+
+overlaps1 <- st_intersection(base1) %>% mutate(n.overlaps = as.character(n.overlaps))
+overlaps2 <- st_intersection(base2) %>% mutate(n.overlaps = as.character(n.overlaps))
+overlaps3 <- st_intersection(base3) %>% mutate(n.overlaps = as.character(n.overlaps))
+overlaps4 <- st_intersection(base4) %>% mutate(n.overlaps = as.character(n.overlaps))
+
+mapview(overlaps1["n.overlaps"],layer.name = 'GAP Status 1') + 
+  mapview(overlaps2["n.overlaps"],layer.name = 'GAP Status 2') +
+  mapview(overlaps3["n.overlaps"],layer.name = 'GAP Status 3') + 
+  mapview(overlaps4["n.overlaps"],layer.name = 'GAP Status 4')
+
 ###############################################################################
 #  Exporting Maps                                                           ####
 
