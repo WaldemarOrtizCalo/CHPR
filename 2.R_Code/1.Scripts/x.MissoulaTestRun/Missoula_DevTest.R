@@ -15,6 +15,7 @@ library(terra)
 library(sf)
 library(tidyverse)
 library(mapview)
+library(ggpubr)
 
 #      Functions                                                            ####
 
@@ -99,7 +100,6 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/protected_areas.png",
 
 #       Eliminating Overlapping Statuses                                    ####
 
-
 base1 <- protected_areas %>%  filter(GAP_Sts == "1") 
 base2 <- protected_areas %>%  filter(GAP_Sts == "2")
 base3 <- protected_areas %>%  filter(GAP_Sts == "3")
@@ -110,13 +110,46 @@ overlaps2 <- st_intersection(base2) %>% mutate(n.overlaps = as.character(n.overl
 overlaps3 <- st_intersection(base3) %>% mutate(n.overlaps = as.character(n.overlaps))
 overlaps4 <- st_intersection(base4) %>% mutate(n.overlaps = as.character(n.overlaps))
 
-mapview(overlaps1["n.overlaps"],layer.name = 'GAP Status 1') + 
-  mapview(overlaps2["n.overlaps"],layer.name = 'GAP Status 2') +
-  mapview(overlaps3["n.overlaps"],layer.name = 'GAP Status 3') + 
-  mapview(overlaps4["n.overlaps"],layer.name = 'GAP Status 4')
+p1 <- ggplot(overlaps1)+
+  geom_sf(data = missoula_boundary) +
+  geom_sf(aes(fill = n.overlaps)) +
+  theme_bw()+
+  ggtitle("Overlapping Polygons GAP Status 1")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
+
+p2 <- ggplot(overlaps2)+
+  geom_sf(data = missoula_boundary) +
+  geom_sf(aes(fill = n.overlaps)) +
+  theme_bw()+
+  ggtitle("Overlapping Polygons GAP Status 2")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
+
+p3 <- ggplot(overlaps3)+
+  geom_sf(data = missoula_boundary) +
+  geom_sf(aes(fill = n.overlaps)) +
+  theme_bw()+
+  ggtitle("Overlapping Polygons GAP Status 3")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
+
+p4 <- ggplot(overlaps4)+
+  geom_sf(data = missoula_boundary) +
+  geom_sf(aes(fill = n.overlaps)) +
+  theme_bw()+
+  ggtitle("Overlapping Polygons GAP Status 4")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
+
+ggarrange(p1,p2,p3,p4,
+          ncol = 2,nrow = 2)
 
 ###############################################################################
 #  Exporting Maps                                                           ####
+
+
+
 
 
 ###############################################################################
