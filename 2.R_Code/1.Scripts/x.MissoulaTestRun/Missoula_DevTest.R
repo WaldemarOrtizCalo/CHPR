@@ -80,7 +80,7 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
 
 ###############################################################################
 #   Protected Area Cleaning                                                 ####
-#       Making Maps of Protected Areas                                      ####
+#      Making Maps of Protected Areas                                       ####
 
 map_GAPstatus <- ggplot(protected_areas)+
   geom_sf(data = missoula_boundary) +
@@ -98,17 +98,20 @@ ggsave(filename = "3.Outputs/MissoulaDevTest/maps/protected_areas.png",
        height = 6, 
        units = "in")
 
-#       Eliminating Overlapping Statuses                                    ####
+#      Eliminating Overlapping Polygons                                     ####
+#        [Filtering by Status]                                              ####
 
-base1 <- protected_areas %>%  filter(GAP_Sts == "1") 
-base2 <- protected_areas %>%  filter(GAP_Sts == "2")
-base3 <- protected_areas %>%  filter(GAP_Sts == "3")
-base4 <- protected_areas %>%  filter(GAP_Sts == "4")
+GAP1 <- protected_areas %>%  filter(GAP_Sts == "1") 
+GAP2 <- protected_areas %>%  filter(GAP_Sts == "2")
+GAP3 <- protected_areas %>%  filter(GAP_Sts == "3")
+GAP4 <- protected_areas %>%  filter(GAP_Sts == "4")
 
-overlaps1 <- st_intersection(base1) %>% mutate(n.overlaps = as.character(n.overlaps))
-overlaps2 <- st_intersection(base2) %>% mutate(n.overlaps = as.character(n.overlaps))
-overlaps3 <- st_intersection(base3) %>% mutate(n.overlaps = as.character(n.overlaps))
-overlaps4 <- st_intersection(base4) %>% mutate(n.overlaps = as.character(n.overlaps))
+#        [Eliminating WITHIN Statuses]                                      ####
+
+overlaps1 <- st_intersection(GAP1) %>% mutate(n.overlaps = as.character(n.overlaps))
+overlaps2 <- st_intersection(GAP2) %>% mutate(n.overlaps = as.character(n.overlaps))
+overlaps3 <- st_intersection(GAP3) %>% mutate(n.overlaps = as.character(n.overlaps))
+overlaps4 <- st_intersection(GAP4) %>% mutate(n.overlaps = as.character(n.overlaps))
 
 p1 <- ggplot(overlaps1)+
   geom_sf(data = missoula_boundary) +
@@ -145,8 +148,41 @@ p4 <- ggplot(overlaps4)+
 ggarrange(p1,p2,p3,p4,
           ncol = 2,nrow = 2)
 
-###############################################################################
+#        [Eliminating BETWEEN Statuses]                                     ####
+
+mapview(GAP1, col.regions = "red") + 
+  mapview(GAP2, col.regions = "blue") +
+  mapview(GAP3, col.regions = "green") +
+  mapview(GAP4, col.regions = "yellow")
+
+
+out.overlap <- st_overlaps(GAP1, GAP3)
+
+dif1 <- st_intersection(GAP1, GAP3)
+dif2 <- st_intersection(GAP3, GAP1)
+
+g1_big <- st_union(GAP1)
+g3_big <- st_union(GAP3)
+
+st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
+
+
+dif1 <- st_erase(p1, p2)
+
+p1 <- st_make_valid(GAP1) 
+p2 <- st_make_valid(GAP3)
+
+st_make_valid(spydf_states)
+
+mapview(GAP1, col.regions = "red") + 
+  mapview(GAP3,col.regions = "green") + 
+  mapview(dif1, col.regions = "purple") +
+  mapview(dif2, col.regions = "yellow")
+
+##############################################################################
 #  Exporting Maps                                                           ####
+
+
 
 
 
