@@ -43,8 +43,8 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
 
 #      Creating Buffered Layer                                              ####
 
-# Creating a 50m buffer 
-roads_buffered <- missoula_roads %>% st_buffer(50)
+# Creating a 20m buffer 
+roads_buffered <- missoula_roads %>% st_buffer(20)
 
 # Exporting
 st_write(obj = roads_buffered,
@@ -150,41 +150,31 @@ ggarrange(p1,p2,p3,p4,
 
 #        [Eliminating BETWEEN Statuses]                                     ####
 
-mapview(GAP1, col.regions = "red") + 
-  mapview(GAP2, col.regions = "blue") +
-  mapview(GAP3, col.regions = "green") +
-  mapview(GAP4, col.regions = "yellow")
+# Preparing Cleaning Layers
+GAP2_cleaner <- protected_areas %>% filter(GAP_Sts %in% c("1")) %>%  st_combine() %>% st_make_valid()
+GAP3_cleaner <- protected_areas %>% filter(GAP_Sts %in% c("1","2")) %>% st_combine() %>% st_make_valid()
+GAP4_cleaner <- protected_areas %>% filter(GAP_Sts %in% c("1","2","3")) %>% st_combine() %>% st_make_valid()
 
+# Setting s2 use to FALSE
+sf_use_s2(F)
 
-out.overlap <- st_overlaps(GAP1, GAP3)
+# Creating Differrence Layers 
+GAP2_clean <- st_difference(GAP2,GAP2_cleaner)
+GAP3_clean <- st_difference(GAP3,GAP3_cleaner)
+GAP4_clean <- st_difference(GAP4,GAP4_cleaner)
 
-dif1 <- st_intersection(GAP1, GAP3)
-dif2 <- st_intersection(GAP3, GAP1)
+# Joining Everything into one final layer
+final <- bind_rows(GAP1,
+                   GAP2_clean,
+                   GAP3_clean,
+                   GAP4_clean)
 
-g1_big <- st_union(GAP1)
-g3_big <- st_union(GAP3)
-
-st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
-
-
-dif1 <- st_erase(p1, p2)
-
-p1 <- st_make_valid(GAP1) 
-p2 <- st_make_valid(GAP3)
-
-st_make_valid(spydf_states)
-
-mapview(GAP1, col.regions = "red") + 
-  mapview(GAP3,col.regions = "green") + 
-  mapview(dif1, col.regions = "purple") +
-  mapview(dif2, col.regions = "yellow")
-
-##############################################################################
-#  Exporting Maps                                                           ####
-
-
-
-
+# Map
+mapview(final, col.regions = "green")+ 
+  mapview(GAP1, col.regions = "red")+ 
+  mapview(GAP2, col.regions = "purple")+
+  mapview(GAP3, col.regions = "blue")+
+  mapview(GAP4,col.regions = "yellow")
 
 
 
