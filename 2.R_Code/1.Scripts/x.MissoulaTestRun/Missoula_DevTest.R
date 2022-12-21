@@ -106,48 +106,6 @@ GAP2 <- protected_areas %>%  filter(GAP_Sts == "2")
 GAP3 <- protected_areas %>%  filter(GAP_Sts == "3")
 GAP4 <- protected_areas %>%  filter(GAP_Sts == "4")
 
-#        [Eliminating WITHIN Statuses]                                      ####
-
-overlaps1 <- st_intersection(GAP1) %>% mutate(n.overlaps = as.character(n.overlaps))
-overlaps2 <- st_intersection(GAP2) %>% mutate(n.overlaps = as.character(n.overlaps))
-overlaps3 <- st_intersection(GAP3) %>% mutate(n.overlaps = as.character(n.overlaps))
-overlaps4 <- st_intersection(GAP4) %>% mutate(n.overlaps = as.character(n.overlaps))
-
-p1 <- ggplot(overlaps1)+
-  geom_sf(data = missoula_boundary) +
-  geom_sf(aes(fill = n.overlaps)) +
-  theme_bw()+
-  ggtitle("Overlapping Polygons GAP Status 1")+
-  theme(plot.title = element_text(hjust = 0.5))+
-  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
-
-p2 <- ggplot(overlaps2)+
-  geom_sf(data = missoula_boundary) +
-  geom_sf(aes(fill = n.overlaps)) +
-  theme_bw()+
-  ggtitle("Overlapping Polygons GAP Status 2")+
-  theme(plot.title = element_text(hjust = 0.5))+
-  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
-
-p3 <- ggplot(overlaps3)+
-  geom_sf(data = missoula_boundary) +
-  geom_sf(aes(fill = n.overlaps)) +
-  theme_bw()+
-  ggtitle("Overlapping Polygons GAP Status 3")+
-  theme(plot.title = element_text(hjust = 0.5))+
-  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
-
-p4 <- ggplot(overlaps4)+
-  geom_sf(data = missoula_boundary) +
-  geom_sf(aes(fill = n.overlaps)) +
-  theme_bw()+
-  ggtitle("Overlapping Polygons GAP Status 4")+
-  theme(plot.title = element_text(hjust = 0.5))+
-  scale_x_continuous(breaks = round(seq(st_bbox(protected_areas)[[1]],st_bbox(protected_areas)[[3]],by = 0.5),digits = 2))
-
-ggarrange(p1,p2,p3,p4,
-          ncol = 2,nrow = 2)
-
 #        [Eliminating BETWEEN Statuses]                                     ####
 
 # Preparing Cleaning Layers
