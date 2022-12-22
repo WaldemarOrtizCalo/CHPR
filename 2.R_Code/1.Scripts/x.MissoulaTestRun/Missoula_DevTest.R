@@ -131,7 +131,7 @@ GAP_clean <- bind_rows(GAP1,
                    GAP4_clean)
 
 # Map
-#mapview(final, col.regions = "green")+ 
+#mapview(GAP_clean, col.regions = "green")+ 
 #  mapview(GAP1, col.regions = "red")+ 
 #  mapview(GAP2, col.regions = "purple")+
 #  mapview(GAP3, col.regions = "blue")+
