@@ -131,11 +131,11 @@ GAP_clean <- bind_rows(GAP1,
                    GAP4_clean)
 
 # Map
-mapview(final, col.regions = "green")+ 
-  mapview(GAP1, col.regions = "red")+ 
-  mapview(GAP2, col.regions = "purple")+
-  mapview(GAP3, col.regions = "blue")+
-  mapview(GAP4,col.regions = "yellow")
+#mapview(final, col.regions = "green")+ 
+#  mapview(GAP1, col.regions = "red")+ 
+#  mapview(GAP2, col.regions = "purple")+
+#  mapview(GAP3, col.regions = "blue")+
+#  mapview(GAP4,col.regions = "yellow")
 
 #        Cleaning Environment                                               ####
 
@@ -154,6 +154,6 @@ gc()
 # Combined Roads 
 roads_combined <- st_read("1.Data/data_clean/RoadLayer/road_buffers.shp") %>% st_combine()
 
-#      Cropping Roads                                                              ####
+#      Cropping Roads                                                       ####
 
 GAP_clean_v2 <- GAP_clean %>% st_difference(roads_combined)
