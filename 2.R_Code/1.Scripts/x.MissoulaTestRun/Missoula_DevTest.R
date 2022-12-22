@@ -156,3 +156,4 @@ roads_combined <- st_read("1.Data/data_clean/RoadLayer/road_buffers.shp") %>% st
 
 #      Cropping Roads                                                              ####
 
+GAP_clean_v2 <- GAP_clean %>% st_difference(roads_combined)
