@@ -41,7 +41,7 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
 ###############################################################################
 #  Road Buffer Layer Creation and Export                                    ####
 
-#      Creating Buffered Layer                                              ####
+#      Creating Buffered Layer and Export                                   ####
 
 # Creating a 20m buffer 
 roads_buffered <- missoula_roads %>% st_buffer(20)
@@ -50,6 +50,9 @@ roads_buffered <- missoula_roads %>% st_buffer(20)
 st_write(obj = roads_buffered,
          dsn = "1.Data/data_clean/RoadLayer/road_buffers.shp",
          append = F)
+
+# Cleaning Environment
+rm(roads_buffered)
 
 #      Creating and Exporting Maps                                          ####
 
@@ -122,7 +125,7 @@ GAP3_clean <- st_difference(GAP3,GAP3_cleaner)
 GAP4_clean <- st_difference(GAP4,GAP4_cleaner)
 
 # Joining Everything into one final layer
-final <- bind_rows(GAP1,
+GAP_clean <- bind_rows(GAP1,
                    GAP2_clean,
                    GAP3_clean,
                    GAP4_clean)
@@ -134,6 +137,22 @@ mapview(final, col.regions = "green")+
   mapview(GAP3, col.regions = "blue")+
   mapview(GAP4,col.regions = "yellow")
 
+#        Cleaning Environment                                               ####
 
+rm(GAP2_clean)
+rm(GAP3_clean)
+rm(GAP4_clean)
+rm(GAP2_cleaner)
+rm(GAP3_cleaner)
+rm(GAP4_cleaner)
+gc()
 
 ###############################################################################
+#   Removing Nuisance Areas from PAD Data                                   ####
+#      Prepping Layers                                                      ####
+
+# Combined Roads 
+roads_combined <- st_read("1.Data/data_clean/RoadLayer/road_buffers.shp") %>% st_combine()
+
+#      Cropping Roads                                                              ####
+
