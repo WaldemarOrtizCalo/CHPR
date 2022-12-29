@@ -3,6 +3,8 @@ library(terra)
 library(raster)
 library(tidyverse)
 library(stringr)
+library(foreach)
+library(doParallel)
 
 products <- mt_products()
 head(products)
@@ -40,7 +42,7 @@ writeRaster(montana_ndvi,
               "_t",
               str_pad(1, 3, pad = "0"),
               ".tif"))
-
+#      [For loop version]                                                              ####
 for (i in 1:nrow(coord_grid)) {
   
   # Data downloader
@@ -72,6 +74,60 @@ for (i in 1:nrow(coord_grid)) {
   # Iteration Tracker
   print(paste0(i, " out of ", nrow(coord_grid), " completed"))
 }
+#      [Foreach Version]                                                              ####
+
+# Cluster Number
+cl <- makeCluster(4)
+registerDoParallel(cl)
+
+# Exporting Packages
+clusterEvalQ(cl,
+             {
+               library(tidyverse)
+               library(terra)
+               library(foreach)
+               library(stringr)
+               library(MODISTools)
+             })
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("coord_grid","dates"), envir=environment())
+
+foreach(i = 1:nrow(coord_grid),
+        .combine = c,
+        .errorhandling = "pass") %dopar% 
+  {
+    # Data downloader
+    montana_ndvi<- mt_subset(product = "VNP13A1",
+                             lat = coord_grid[i,1],
+                             lon =  coord_grid[i,2],
+                             band = "500_m_16_days_NDVI",
+                             start = dates[1,2],
+                             end = dates[1,2],
+                             km_lr = 50,
+                             km_ab = 100,
+                             site_name = paste0("MT_NDVI_",dates[1,2]),
+                             internal = T,
+                             progress = F) %>% 
+      mt_to_raster(reproject = T) %>% 
+      rast() 
+    
+    # Raster Export
+    writeRaster(montana_ndvi,
+                filename = paste0(
+                  "1.Data/data_raw/NDVI/",
+                  "MT_NDVI_",
+                  dates[1,2],
+                  "_t",
+                  str_pad(i, 3, pad = "0"),
+                  ".tif"),
+                overwrite=TRUE)
+    
+    # Iteration Tracker
+    return(paste0(i, " out of ", nrow(coord_grid), " completed"))
+  }
+
+
 
 ###############################################################################
 
