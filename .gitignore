@@ -47,3 +47,6 @@ vignettes/*.pdf
 # Ignoring RMD and html files
 *.Rmd
 *.html
+
+# Ignore vrt
+*.vrt
