@@ -56,7 +56,8 @@ clusterEvalQ(cl,
 # Exporting data to clusters
 clusterExport(cl=cl, varlist=c("coord_grid","dates"), envir=environment())
 
-foreach (t = 1:nrow(dates),
+# Progress: 18 completed. Start at 19
+foreach (t = 19:nrow(dates),
          .combine = c,
          .errorhandling = "pass") %do% {
            
