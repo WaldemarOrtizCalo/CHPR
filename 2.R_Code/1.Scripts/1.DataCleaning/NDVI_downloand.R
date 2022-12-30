@@ -40,7 +40,7 @@ coord_grid <- expand.grid(lat_list,lon_list)
 #      Foreach Version                                                      ####
 
 # Cluster Number
-cl <- makeCluster(4)
+cl <- makeCluster(6)
 registerDoParallel(cl)
 
 # Exporting Packages
