@@ -24,6 +24,7 @@ library(sf)
 #      Data                                                                 ####
 shp_montana <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp") %>% 
   vect()
+
 ###############################################################################
 #   NDVI Download                                                           ####
 #      NDVI Details                                                         ####
@@ -56,8 +57,8 @@ clusterEvalQ(cl,
 # Exporting data to clusters
 clusterExport(cl=cl, varlist=c("coord_grid","dates"), envir=environment())
 
-# Progress: 18 completed. Start at 19
-foreach (t = 19:nrow(dates),
+# Progress: 213 completed. Start at 214
+foreach (t = 214:nrow(dates),
          .combine = c,
          .errorhandling = "pass") %do% {
            
@@ -125,6 +126,5 @@ foreach (t = 19:nrow(dates),
            # Check
            return(paste0(t, " out of ", nrow(dates), " completed"))
          }
-
 
 ###############################################################################
