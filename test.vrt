@@ -1,0 +1,632 @@
+<VRTDataset rasterXSize="2021" rasterYSize="1622">
+  <SRS dataAxisToSRSAxisMapping="2,1">GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]</SRS>
+  <GeoTransform> -1.1868301948027477e+02,  8.4442307692307698e-03,  0.0000000000000000e+00,  4.9883373325760047e+01,  0.0000000000000000e+00, -4.1700000000000044e-03</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <NoDataValue>nan</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t001.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="553" RasterYSize="421" DataType="Float32" BlockXSize="553" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="553" ySize="420.959232362146" />
+      <DstRect xOff="45.7444140277022" yOff="1201.04076763785" xSize="533.731268503758" ySize="420.959232362145" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t002.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="421" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="421" />
+      <DstRect xOff="37.58141162838" yOff="961.232618423571" xSize="551.069733545888" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t003.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="549" RasterYSize="421" DataType="Float32" BlockXSize="549" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="549" ySize="421" />
+      <DstRect xOff="28.3732105637428" yOff="721.424469209289" xSize="567.579230243681" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t004.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="546" RasterYSize="423" DataType="Float32" BlockXSize="546" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="546" ySize="423" />
+      <DstRect xOff="19.6031932202905" yOff="480.616298428566" xSize="585.168754270099" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t005.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="544" RasterYSize="423" DataType="Float32" BlockXSize="544" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="544" ySize="423" />
+      <DstRect xOff="9.88580227791548" yOff="240.808149214284" xSize="603.640537462992" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t006.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="543" RasterYSize="425" DataType="Float32" BlockXSize="543" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="543" ySize="425" />
+      <DstRect xOff="0" yOff="0" xSize="623.751309496698" ySize="425" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t007.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="555" RasterYSize="421" DataType="Float32" BlockXSize="555" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="555" ySize="420.959232362146" />
+      <DstRect xOff="166.15918012587" yOff="1201.04076763785" xSize="531.060806194488" ySize="420.959232362145" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t008.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="553" RasterYSize="421" DataType="Float32" BlockXSize="553" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="553" ySize="421" />
+      <DstRect xOff="157.307946154252" yOff="961.232618423571" xSize="547.48385333637" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t009.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="550" RasterYSize="421" DataType="Float32" BlockXSize="550" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="550" ySize="421" />
+      <DstRect xOff="148.865742365351" yOff="721.424469209289" xSize="564.053746299249" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t010.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="548" RasterYSize="423" DataType="Float32" BlockXSize="548" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="548" ySize="423" />
+      <DstRect xOff="139.464289389977" yOff="480.616298428566" xSize="582.12051924391" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t011.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="545" RasterYSize="423" DataType="Float32" BlockXSize="545" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="545" ySize="423" />
+      <DstRect xOff="130.620797126853" yOff="240.808149214284" xSize="599.586882259167" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t012.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="544" RasterYSize="425" DataType="Float32" BlockXSize="544" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="544" ySize="425" />
+      <DstRect xOff="120.151992012895" yOff="0" xSize="619.74620815304" ySize="425" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t013.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="556" RasterYSize="421" DataType="Float32" BlockXSize="556" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="556" ySize="420.959232362146" />
+      <DstRect xOff="285.878045828054" yOff="1201.04076763785" xSize="527.408608517421" ySize="420.959232362145" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t014.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="554" RasterYSize="421" DataType="Float32" BlockXSize="554" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="554" ySize="421" />
+      <DstRect xOff="277.742518898" yOff="961.232618423571" xSize="543.881393759963" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t015.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="421" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="421" />
+      <DstRect xOff="269.36430434228" yOff="721.424469209289" xSize="560.875244818949" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t016.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="549" RasterYSize="423" DataType="Float32" BlockXSize="549" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="549" ySize="423" />
+      <DstRect xOff="260.060450387328" yOff="480.616298428566" xSize="577.981598724663" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t017.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="547" RasterYSize="423" DataType="Float32" BlockXSize="547" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="547" ySize="423" />
+      <DstRect xOff="250.606086942988" yOff="240.808149214284" xSize="596.604964700524" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t018.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="545" RasterYSize="423" DataType="Float32" BlockXSize="545" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="545" ySize="423" />
+      <DstRect xOff="241.069043144287" yOff="1" xSize="615.722158961511" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t019.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="558" RasterYSize="421" DataType="Float32" BlockXSize="558" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="558" ySize="420.959232362146" />
+      <DstRect xOff="406.298733128679" yOff="1201.04076763785" xSize="524.019312229561" ySize="420.959232362145" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t020.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="555" RasterYSize="421" DataType="Float32" BlockXSize="555" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="555" ySize="421" />
+      <DstRect xOff="398.177213925505" yOff="961.232618423571" xSize="540.26235481667" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t021.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="421" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="421" />
+      <DstRect xOff="389.135716008245" yOff="721.424469209289" xSize="556.299339558187" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t022.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="550" RasterYSize="423" DataType="Float32" BlockXSize="550" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="550" ySize="423" />
+      <DstRect xOff="380.656500328524" yOff="480.616298428566" xSize="573.82373035755" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t023.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="548" RasterYSize="423" DataType="Float32" BlockXSize="548" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="548" ySize="423" />
+      <DstRect xOff="371.341081791919" yOff="240.808149214284" xSize="592.503939877022" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t024.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="546" RasterYSize="423" DataType="Float32" BlockXSize="546" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="546" ySize="423" />
+      <DstRect xOff="361.226840779328" yOff="1" xSize="611.032566613528" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t025.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="559" RasterYSize="419" DataType="Float32" BlockXSize="559" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="559" ySize="419" />
+      <DstRect xOff="526.713484208925" yOff="1202.04076763785" xSize="520.324481894784" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t026.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="557" RasterYSize="421" DataType="Float32" BlockXSize="557" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="557" ySize="421" />
+      <DstRect xOff="517.909532084613" yOff="961.232618423571" xSize="536.932270553405" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t027.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="554" RasterYSize="421" DataType="Float32" BlockXSize="554" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="554" ySize="421" />
+      <DstRect xOff="509.634277985177" yOff="721.424469209289" xSize="553.066363015259" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t028.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="421" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="421" />
+      <DstRect xOff="500.517596498212" yOff="481.616298428566" xSize="570.680756092007" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t029.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="550" RasterYSize="423" DataType="Float32" BlockXSize="550" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="550" ySize="423" />
+      <DstRect xOff="491.332406066345" yOff="240.808149214284" xSize="588.804372580279" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t030.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="547" RasterYSize="423" DataType="Float32" BlockXSize="547" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="547" ySize="423" />
+      <DstRect xOff="482.143875399248" yOff="1" xSize="606.969437485766" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t031.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="561" RasterYSize="419" DataType="Float32" BlockXSize="561" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="561" ySize="419" />
+      <DstRect xOff="646.432485072395" yOff="1202.04076763785" xSize="517.535595536324" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t032.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="558" RasterYSize="421" DataType="Float32" BlockXSize="558" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="558" ySize="421" />
+      <DstRect xOff="638.344104828362" yOff="961.232618423571" xSize="533.270598952401" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t033.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="555" RasterYSize="421" DataType="Float32" BlockXSize="555" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="555" ySize="421" />
+      <DstRect xOff="630.126794219233" yOff="721.424469209289" xSize="549.463903438853" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t034.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="421" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="421" />
+      <DstRect xOff="621.107709371784" yOff="481.616298428566" xSize="566.104850831246" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t035.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="551" RasterYSize="423" DataType="Float32" BlockXSize="551" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="551" ySize="423" />
+      <DstRect xOff="612.067287659452" yOff="240.808149214284" xSize="584.654793896607" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t036.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="549" RasterYSize="423" DataType="Float32" BlockXSize="549" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="549" ySize="423" />
+      <DstRect xOff="602.301805126073" yOff="1" xSize="603.337371897062" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t037.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="562" RasterYSize="419" DataType="Float32" BlockXSize="562" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="562" ySize="419" />
+      <DstRect xOff="766.847116009279" yOff="1202.04076763785" xSize="513.799316784331" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t038.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="559" RasterYSize="421" DataType="Float32" BlockXSize="559" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="559" ySize="421" />
+      <DstRect xOff="758.778799855864" yOff="961.232618423571" xSize="529.592347984513" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t039.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="557" RasterYSize="421" DataType="Float32" BlockXSize="557" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="557" ySize="421" />
+      <DstRect xOff="750.625356196165" yOff="721.424469209289" xSize="546.166977909361" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t040.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="554" RasterYSize="421" DataType="Float32" BlockXSize="554" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="554" ySize="421" />
+      <DstRect xOff="741.7038862343" yOff="481.616298428566" xSize="562.907401503075" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t041.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="423" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="423" />
+      <DstRect xOff="732.052690731412" yOff="240.808149214284" xSize="580.486267365066" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t042.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="550" RasterYSize="423" DataType="Float32" BlockXSize="550" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="550" ySize="423" />
+      <DstRect xOff="723.218724165683" yOff="1" xSize="599.225688909132" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t043.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="563" RasterYSize="419" DataType="Float32" BlockXSize="563" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="563" ySize="419" />
+      <DstRect xOff="887.261882107446" yOff="1202.04076763785" xSize="510.046458665452" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t044.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="560" RasterYSize="421" DataType="Float32" BlockXSize="560" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="560" ySize="421" />
+      <DstRect xOff="879.213372599617" yOff="961.232618423571" xSize="525.897517649738" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t045.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="558" RasterYSize="421" DataType="Float32" BlockXSize="558" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="558" ySize="421" />
+      <DstRect xOff="870.396767862129" yOff="721.424469209289" xSize="542.521885675245" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t046.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="555" RasterYSize="421" DataType="Float32" BlockXSize="555" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="555" ySize="421" />
+      <DstRect xOff="861.564855482667" yOff="481.616298428566" xSize="558.665452061032" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t047.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="553" RasterYSize="423" DataType="Float32" BlockXSize="553" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="553" ySize="423" />
+      <DstRect xOff="852.787685580348" yOff="240.808149214284" xSize="576.298792985652" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t048.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="551" RasterYSize="423" DataType="Float32" BlockXSize="551" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="551" ySize="423" />
+      <DstRect xOff="843.370732690047" yOff="1" xSize="595.095058073332" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t049.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="565" RasterYSize="419" DataType="Float32" BlockXSize="565" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="565" ySize="419" />
+      <DstRect xOff="1006.98088297092" yOff="1202.04076763785" xSize="507.174675472558" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t050.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="562" RasterYSize="419" DataType="Float32" BlockXSize="562" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="562" ySize="419" />
+      <DstRect xOff="998.945828327951" yOff="962.23261842357" xSize="522.451377818266" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t051.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="559" RasterYSize="421" DataType="Float32" BlockXSize="559" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="559" ySize="421" />
+      <DstRect xOff="990.895220866197" yOff="721.424469209289" xSize="538.198223639262" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t052.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="557" RasterYSize="421" DataType="Float32" BlockXSize="557" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="557" ySize="421" />
+      <DstRect xOff="982.161016480019" yOff="481.616298428566" xSize="555.401685265315" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t053.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="554" RasterYSize="421" DataType="Float32" BlockXSize="554" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="554" ySize="421" />
+      <DstRect xOff="973.522567173459" yOff="241.808149214286" xSize="572.092370758369" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t054.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="552" RasterYSize="423" DataType="Float32" BlockXSize="552" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="552" ySize="423" />
+      <DstRect xOff="963.5286459054" yOff="1" xSize="590.291778638124" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t055.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="566" RasterYSize="419" DataType="Float32" BlockXSize="566" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="566" ySize="419" />
+      <DstRect xOff="1127.39563405116" yOff="1202.04076763785" xSize="503.380368936462" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t056.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="563" RasterYSize="419" DataType="Float32" BlockXSize="563" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="563" ySize="419" />
+      <DstRect xOff="1119.3804010717" yOff="962.23261842357" xSize="518.71391482578" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t057.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="560" RasterYSize="421" DataType="Float32" BlockXSize="560" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="560" ySize="421" />
+      <DstRect xOff="1111.38786164067" yOff="721.424469209289" xSize="534.518788430883" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t058.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="558" RasterYSize="421" DataType="Float32" BlockXSize="558" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="558" ySize="421" />
+      <DstRect xOff="1102.75706642121" yOff="481.616298428566" xSize="551.112366203597" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t059.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="556" RasterYSize="421" DataType="Float32" BlockXSize="556" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="556" ySize="421" />
+      <DstRect xOff="1093.50797024542" yOff="241.808149214286" xSize="568.89018446823" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t060.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="554" RasterYSize="423" DataType="Float32" BlockXSize="554" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="554" ySize="423" />
+      <DstRect xOff="1084.44568052532" yOff="1" xSize="587.181963106353" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t061.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="567" RasterYSize="419" DataType="Float32" BlockXSize="567" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="567" ySize="419" />
+      <DstRect xOff="1247.81028000596" yOff="1202.04076763785" xSize="499.569483033478" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t062.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="564" RasterYSize="419" DataType="Float32" BlockXSize="564" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="564" ySize="419" />
+      <DstRect xOff="1239.8150960992" yOff="962.23261842357" xSize="514.959872466408" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t063.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="562" RasterYSize="421" DataType="Float32" BlockXSize="562" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="562" ySize="421" />
+      <DstRect xOff="1231.1651945091" yOff="721.424469209289" xSize="531.103438852199" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t064.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="559" RasterYSize="421" DataType="Float32" BlockXSize="559" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="559" ySize="421" />
+      <DstRect xOff="1222.61224138844" yOff="481.616298428566" xSize="547.466089728991" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t065.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="557" RasterYSize="421" DataType="Float32" BlockXSize="557" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="557" ySize="421" />
+      <DstRect xOff="1214.24283565912" yOff="241.808149214286" xSize="564.636392621271" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t066.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="555" RasterYSize="423" DataType="Float32" BlockXSize="555" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="555" ySize="423" />
+      <DstRect xOff="1204.59768904969" yOff="1" xSize="582.983830562514" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t067.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="569" RasterYSize="419" DataType="Float32" BlockXSize="569" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="569" ySize="419" />
+      <DstRect xOff="1367.52926585152" yOff="1202.04076763785" xSize="496.614803006148" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t068.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="566" RasterYSize="419" DataType="Float32" BlockXSize="566" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="566" ySize="419" />
+      <DstRect xOff="1359.54150834132" yOff="962.23261842357" xSize="512.094010475974" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t069.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="563" RasterYSize="419" DataType="Float32" BlockXSize="563" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="563" ySize="419" />
+      <DstRect xOff="1351.65771074315" yOff="722.42446920929" xSize="527.381370986107" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t070.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="561" RasterYSize="421" DataType="Float32" BlockXSize="561" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="561" ySize="421" />
+      <DstRect xOff="1343.20840238579" yOff="481.616298428566" xSize="544.109952174904" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t071.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="558" RasterYSize="421" DataType="Float32" BlockXSize="558" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="558" ySize="421" />
+      <DstRect xOff="1334.22825491049" yOff="241.808149214286" xSize="560.363652926441" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t072.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="556" RasterYSize="423" DataType="Float32" BlockXSize="556" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="556" ySize="423" />
+      <DstRect xOff="1325.52052929176" yOff="1" xSize="578.108312457299" ySize="423" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t073.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="570" RasterYSize="419" DataType="Float32" BlockXSize="570" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="570" ySize="419" />
+      <DstRect xOff="1487.94403194968" yOff="1202.04076763785" xSize="492.762468685947" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t074.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="568" RasterYSize="419" DataType="Float32" BlockXSize="568" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="568" ySize="419" />
+      <DstRect xOff="1479.98210928582" yOff="962.23261842357" xSize="508.522341152356" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t075.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="565" RasterYSize="419" DataType="Float32" BlockXSize="565" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="565" ySize="419" />
+      <DstRect xOff="1472.15627272008" yOff="722.42446920929" xSize="523.902072420861" ySize="419" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t076.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="562" RasterYSize="421" DataType="Float32" BlockXSize="562" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="562" ySize="421" />
+      <DstRect xOff="1463.80445232699" yOff="481.616298428566" xSize="539.755499886131" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t077.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="560" RasterYSize="421" DataType="Float32" BlockXSize="560" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="560" ySize="421" />
+      <DstRect xOff="1454.96324975942" yOff="241.808149214286" xSize="557.066727396949" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">D:\Drive\Research\CPHR\CPHR_Workspace\1.Data/data_raw/NDVI/MT_NDVI_2016-08-28_t078.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="558" RasterYSize="421" DataType="Float32" BlockXSize="558" BlockYSize="3" />
+      <SrcRect xOff="0" yOff="0" xSize="558" ySize="421" />
+      <DstRect xOff="1445.67253781612" yOff="2" xSize="574.901389205193" ySize="421" />
+      <NODATA>nan</NODATA>
+    </ComplexSource>
+  </VRTRasterBand>
+</VRTDataset>
