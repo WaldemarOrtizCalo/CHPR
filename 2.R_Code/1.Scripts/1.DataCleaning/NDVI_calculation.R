@@ -342,3 +342,26 @@ for (i in 1:length(seasons_unique)) {
 }
 
 ###############################################################################
+#   Summary Rasters - Overall Yearly and Seasonal                           ####
+#      Overall: Yearly                                                      ####
+
+# Export Directory 
+export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_yearly_overall"
+
+# Making list of tiles
+ndvi_stack <- list.files("3.Outputs/Cindy_NDVI_Database/summaries_yearly",
+                         full.names = T) %>% 
+  str_subset('2020',negate = T) %>% 
+  str_subset('2021',negate = T) %>% 
+  str_subset('2022',negate = T) %>% rast()
+
+# Summarizing
+yearly_summary <- app(ndvi_stack,mean)
+
+# Export
+writeRaster(yearly_summary,
+            filename = paste0(export_dir,
+                              "/ndvi_avg_yr_2008_2019_250m.tif"),
+            overwrite = T)
+
+
