@@ -17,7 +17,7 @@ library(stringr)
 library(foreach)
 library(doParallel)
 library(lubridate)
-  
+
 #      Functions                                                            ####
 
 date2character <- function(x){
@@ -44,6 +44,13 @@ getSeason <- function(DATES) {
                   ifelse (d >= SS & d < FE, "summer", "fall")))
 }
 
+season_year_locator <- function(input_date,ref_sheet) { 
+  input_date %within% ref_sheet$int
+  
+  ref_sheet$season_year[which(input_date %within% ref_sheet$int)]
+}
+
+
 #      Data                                                                 ####
 
 # Montana shapefile
@@ -51,7 +58,7 @@ shp_montana <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoun
   vect()
 
 ###############################################################################
-#   NDVI Calculation and Export                                             ####
+#   NDVI Calculation and Export [ RUN ONLY ONCE]                            ####
 #      Importing Data                                                       ####
 
 # NDVI List
@@ -112,7 +119,7 @@ for (i in 1:length(ndvi_names)) {
 rm(list = ls())
 gc()
 ###############################################################################
-#   Summary Rasters                                                         ####
+#   Summary Rasters - Yearly and Seasonal                                   ####
 #      Yearly Summaries                                                     ####
 #        Creating NDVI Master Database                                      ####
 
@@ -159,22 +166,28 @@ for (i in 1:length(years_unique)) {
   writeRaster(ndvi_summary,
               filename = paste0(export_dir,
                                 "/ndvi_avg_yr_",
-                                target_year,"_250m.tif"))
+                                target_year,"_250m.tif"),
+              overwrite = T)
   
   # Iteration Tracker
   print(paste0(i, " out of ", length(years_unique), " completed"))
 }
 
 #      Seasonal Summaries                                                   ####
-
 #        Creating Seasonal Reference                                        ####
 
 
+#           Period Settings                                                 ####
+
+period_buffer <- 3
+
+study_period_start <- min(unique(ndvi_database$year))- period_buffer
+study_period_end <- max(unique(ndvi_database$year))+ period_buffer
+
 #           Season 1: Winter                                                ####
 
-
 s_start <- expand.grid(season = "winter",
-                       year = unique(ndvi_database$year),
+                       year = seq(study_period_start,study_period_end),
                        month = "12",
                        day = "21") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -182,7 +195,7 @@ s_start <- expand.grid(season = "winter",
 
 
 
-s_end <- expand.grid(year = unique(ndvi_database$year)+1,
+s_end <- expand.grid(year = seq(study_period_start,study_period_end)+1,
                      month = "03",
                      day = "19") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -191,11 +204,9 @@ s_end <- expand.grid(year = unique(ndvi_database$year)+1,
 
 winter_matrix <- s_start %>% mutate(end_date = s_end)
 
-
-
 #           Season 2: Spring                                                ####
 s_start <- expand.grid(season = "spring",
-                       year = unique(ndvi_database$year),
+                       year = seq(study_period_start,study_period_end),
                        month = "03",
                        day = "20") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -203,7 +214,7 @@ s_start <- expand.grid(season = "spring",
 
 
 
-s_end <- expand.grid(year = unique(ndvi_database$year),
+s_end <- expand.grid(year = seq(study_period_start,study_period_end),
                      month = "06",
                      day = "20") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -216,7 +227,7 @@ spring_matrix <- s_start %>% mutate(end_date = s_end)
 
 #           Season 2: summer                                                ####
 s_start <- expand.grid(season = "summer",
-                       year = unique(ndvi_database$year),
+                       year = seq(study_period_start,study_period_end),
                        month = "06",
                        day = "21") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -224,7 +235,7 @@ s_start <- expand.grid(season = "summer",
 
 
 
-s_end <- expand.grid(year = unique(ndvi_database$year),
+s_end <- expand.grid(year = seq(study_period_start,study_period_end),
                      month = "09",
                      day = "22") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -237,7 +248,7 @@ summer_matrix <- s_start %>% mutate(end_date = s_end)
 
 #           Season 4: fall                                                  ####
 s_start <- expand.grid(season = "fall",
-                       year = unique(ndvi_database$year),
+                       year = seq(study_period_start,study_period_end),
                        month = "09",
                        day = "23") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -245,7 +256,7 @@ s_start <- expand.grid(season = "fall",
 
 
 
-s_end <- expand.grid(year = unique(ndvi_database$year),
+s_end <- expand.grid(year = seq(study_period_start,study_period_end),
                      month = "12",
                      day = "20") %>% 
   mutate(date_str = paste(year,month,day,sep = "-"),.keep = "unused") %>% 
@@ -263,10 +274,10 @@ seasonal_reference <- bind_rows(fall_matrix,
                                  spring_matrix,
                                  summer_matrix) %>% 
   mutate(int = interval(start_date,end_date)) %>% 
-  mutate(year = year(start_date),.after = season)
+  mutate(season_year = paste(season,year(start_date),sep = "_"),.after = season)
+
 
 #        Creating NDVI Master Database                                      ####
-#           NDVI Database                                                   ####
 
 # List of NDVI tiles
 ndvi_list <- list.files("1.Data/data_clean/NDVI_MODIS",
@@ -281,13 +292,53 @@ ndvi_dates <- list.files("1.Data/data_clean/NDVI_MODIS",
 
 # Creating Database
 ndvi_database <- data.frame(filepath = ndvi_list,
-                            dates = ndvi_dates) %>% 
-  mutate(year = year(dates)) %>% 
+                            date = ndvi_dates) %>% 
+  mutate(year = year(date)) %>% 
   filter(year != 2007) %>% 
-  mutate(season = getSeason(dates)) 
+  mutate(season = NA) 
+
+# Assigning Season_year value
+for (i in 1:nrow(ndvi_database)) {
+  d <- ndvi_database[i,2]
+  ndvi_database[i,4] <- season_year_locator(d, ref_sheet = seasonal_reference)
+  print(i)
+}
 
 
 
 
+
+#        Creating Raster Summaries                                          ####
+
+# Indicating Export Directory
+export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_seasonal" 
+
+# Create a list of unique seasons
+seasons_unique <- ndvi_database$season %>% unique()
+
+for (i in 1:length(seasons_unique)) {
+  
+  # Extracting a certain year
+  target_season <- seasons_unique[i]
+  
+  # Subsetting Database for target ndvi files
+  target_layers <- ndvi_database %>% 
+    filter(season == seasons_unique[1]) %>% 
+    .$filepath
+  
+  # Stacking NDVI tiles and summarizing across
+  ndvi_summary <- rast(target_layers) %>% 
+    app(fun=mean)
+  
+  # Exporting NDVI summary raster
+  writeRaster(ndvi_summary,
+              filename = paste0(export_dir,
+                                "/ndvi_avg_",
+                                target_season,"_250m.tif"),
+              overwrite = T)
+  
+  # Iteration Tracker
+  print(paste0(i, " out of ", length(seasons_unique), " completed"))
+}
 
 ###############################################################################
