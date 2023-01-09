@@ -342,7 +342,7 @@ for (i in 1:length(seasons_unique)) {
 }
 
 ###############################################################################
-#   Summary Rasters - Overall Yearly and Seasonal                           ####
+#   Summary Rasters - Overall Yearly and Seasonal (2008-2019)               ####
 #      Overall: Yearly                                                      ####
 
 # Export Directory 
@@ -365,3 +365,44 @@ writeRaster(yearly_summary,
             overwrite = T)
 
 
+
+#      Overall: Seasonal                                                    ####
+
+# Export Directory 
+export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_seasonal_overall"
+
+# Making list of tiles
+ndvi_stack <- list.files("3.Outputs/Cindy_NDVI_Database/summaries_seasonal",
+                         full.names = T) %>% 
+  str_subset('2020',negate = T) %>% 
+  str_subset('2021',negate = T) %>% 
+  str_subset('2022',negate = T)
+
+# Season list
+season_list <- c("winter",
+                 "spring",
+                 "summer",
+                 "fall")
+
+# Summarizing
+for (i in 1:length(season_list)) {
+  
+  # Subset Season and Stack 
+  stack <- ndvi_stack %>% str_subset(pattern = season_list[i]) %>% 
+    rast()
+  
+  # Summarizing
+  seasonal_summary <- app(stack,mean)
+  
+  # Export
+  writeRaster(seasonal_summary,
+              filename = paste0(export_dir,
+                                "/ndvi_avg_",season_list[i],"_2008_2019_250m.tif"),
+              overwrite = T)
+  
+  # Iteration Tracker
+  print(paste0(i, " out of ", length(season_list), " completed"))
+  
+}
+
+###############################################################################
