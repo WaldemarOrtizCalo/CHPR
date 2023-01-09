@@ -72,7 +72,7 @@ ndvi_names <- list.files("1.Data/data_raw/NDVI_Earthdata",
 export_dir <- "1.Data/data_clean/NDVI_MODIS"
 
 # Starting at 100 to resume.
-for (i in 100:length(ndvi_names)) {
+for (i in 1:length(ndvi_names)) {
   
   # Making a List of Rasters 
   raster_list <- str_subset(ndvi_list,
