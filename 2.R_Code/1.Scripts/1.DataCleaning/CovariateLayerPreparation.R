@@ -219,3 +219,52 @@ rm(CountyNames)
 gc()
 
 ###############################################################################
+#   [Montana NLCD]                                                          ####
+#      [Data]                                                               ####
+
+# Montana shapefile
+shp_montana <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp") %>% 
+  st_transform(crs = "epsg:5070") %>% 
+  vect()
+
+# Rasters
+raster_list <- list.files("1.Data/data_raw/NLCD",
+                          pattern = "img",
+                          full.names = T)
+
+#      [Protocol]                                                           ####
+
+# Export Directory
+export_dir <- "1.Data/data_clean/NLCD"
+
+for (i in 1:length(raster_list)) {
+  
+  # Import Raster filepath and make it into a raster
+  raster <- rast(raster_list[[i]])
+  
+  raster_name <- str_extract(raster_list[[i]],
+                             pattern = "(?<=_)\\d\\d\\d\\d(?=_)")
+  
+  # Raster Protocol
+  raster_clean <- raster %>% 
+    crop(shp_montana) %>% 
+    mask(shp_montana) %>% 
+    project("EPSG:4326")
+  
+  # Export
+  writeRaster(raster_clean,
+              filename = paste0(export_dir,
+                                "/nlcd_",raster_name,".tif"),
+              overwrite = T)
+  
+  # Iteration Tracker
+  print(paste0(i, " out of ", length(raster_list), " completed"))
+}
+###############################################################################
+#   [Montana NDVI]                                                          ####
+
+# Sourcing to another script for execution
+source("1.Scripts\\1.DataCleaning\\NDVI_calculation.R")
+
+###############################################################################
+
