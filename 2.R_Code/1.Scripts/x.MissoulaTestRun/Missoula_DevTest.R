@@ -156,56 +156,27 @@ mapview(GAP1, col.regions = "red") +
   mapview(GAP4, col.regions = "yellow")
 
 
-out.overlap <- st_overlaps(GAP1, GAP3)
 
-dif1 <- st_intersection(GAP1, GAP3)
-dif2 <- st_intersection(GAP3, GAP1)
-
-g1_big <- st_union(GAP1)
-g3_big <- st_union(GAP3)
-
-st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
-
-
-dif1 <- st_erase(p1, p2)
-
-p1 <- st_make_valid(GAP1) 
-p2 <- st_make_valid(GAP3)
-
-st_make_valid(spydf_states)
-
-mapview(GAP1, col.regions = "red") + 
-  mapview(GAP2,col.regions = "green") + 
-  mapview(GAP3, col.regions = "purple") +
-  mapview(GAP4, col.regions = "yellow")
-
-
-
-mapview(poly1) + mapview(poly2)
-
-GAP1_combined <- GAP1 %>% st_combine()
-GAP2_combined <- GAP2 %>% st_combine()
-GAP3_combined <- GAP3 %>% st_combine()
-GAP4_combined <- GAP4 %>% st_combine()
-
-poly1 <- GAP1 %>% st_combine()
-poly2 <- GAP2 
-
-gs <- st_difference(poly2,poly1)
+GAP1_combined <- GAP1 %>% st_combine() %>% st_make_valid()
+GAP2_combined <- GAP2 %>% st_combine() %>% st_make_valid()
+GAP3_combined <- GAP3 %>% st_combine() %>% st_make_valid()
+GAP4_combined <- GAP4 %>% st_combine() %>% st_make_valid()
 
 sf_use_s2(FALSE)
 GAP2_clean <- st_difference(GAP2,GAP1_combined)
-GAP3_clean <- st_difference(GAP3,GAP2_combined)
-GAP4_clean <- st_difference(GAP4,GAP3_combined)
+GAP3_clean <- st_difference(GAP3,GAP2_combined)%>% 
+  st_difference(GAP1_combined)
+GAP4_clean <- st_difference(GAP4,GAP3_combined) %>% 
+  st_difference(GAP2_combined) %>% 
+  st_difference(GAP1_combined)
 
-
-
-
-t <- protected_areas %>% 
-  filter(GAP_Sts %in% as.character(2:4))
-
-
-mapview(t) + mapview(GAP1, col.region = "red")+mapview(protected_areas)
+mapview(GAP1, col.region = "red")+ 
+  mapview(GAP2, col.region = "blue")+ 
+  mapview(GAP3, col.region = "yellow")+ 
+  mapview(GAP4, col.region = "green")+ 
+  mapview(GAP2_clean, col.region = "orange") +
+  mapview(GAP3_clean, col.region = "pink") +
+  mapview(GAP4_clean, col.region = "#EE30A7")
 
 ##############################################################################
 #  Exporting Maps                                                           ####
