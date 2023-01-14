@@ -150,25 +150,19 @@ ggarrange(p1,p2,p3,p4,
 
 #        [Eliminating BETWEEN Statuses]                                     ####
 
-mapview(GAP1, col.regions = "red") + 
-  mapview(GAP2, col.regions = "blue") +
-  mapview(GAP3, col.regions = "green") +
-  mapview(GAP4, col.regions = "yellow")
-
-
-
 GAP1_combined <- GAP1 %>% st_combine() %>% st_make_valid()
 GAP2_combined <- GAP2 %>% st_combine() %>% st_make_valid()
 GAP3_combined <- GAP3 %>% st_combine() %>% st_make_valid()
 GAP4_combined <- GAP4 %>% st_combine() %>% st_make_valid()
 
-sf_use_s2(FALSE)
+sf_use_s2(F)
 GAP2_clean <- st_difference(GAP2,GAP1_combined)
 GAP3_clean <- st_difference(GAP3,GAP2_combined)%>% 
   st_difference(GAP1_combined)
 GAP4_clean <- st_difference(GAP4,GAP3_combined) %>% 
   st_difference(GAP2_combined) %>% 
   st_difference(GAP1_combined)
+sf_use_s2(T)
 
 mapview(GAP1, col.region = "red")+ 
   mapview(GAP2, col.region = "blue")+ 
@@ -178,13 +172,52 @@ mapview(GAP1, col.region = "red")+
   mapview(GAP3_clean, col.region = "pink") +
   mapview(GAP4_clean, col.region = "#EE30A7")
 
-##############################################################################
+GAP_layer_final <- bind_rows(GAP1,GAP2_clean,GAP3_clean,GAP4_clean)
+
+mapview(GAP_layer_final,zcol = "GAP_Sts")
+#      Exporting Final Layer                                                ####
+
+export_dir <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/Montana_ProtectedAreas/county_based"
+county_name <- "Missoula"
+
+st_write(GAP_layer_final,
+         paste0(export_dir,"/",county_name,"_GAP_areas.shp"),
+         append = F)
+
+t <- st_read(paste0(export_dir,"/",county_name,"_GAP_areas.shp"))
+
+mapview(t) + mapview(GAP_layer_final)
+###############################################################################
+#   GAP Status: Road Cleaning                                               ####
+
+library(whitebox)
+
+
+missoula_gap <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
+county_roads <- "1.Data/data_clean/RoadLayer/road_buffers.shp"
+
+print(Sys.time())
+tictoc::tic()
+wbt_erase(
+  missoula_gap, 
+  county_roads, 
+  "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/DataExtraction_polygons/missoula_clean.shp"
+)
+tictoc::toc()
+print(Sys.time())
+
+dirty <- st_read(missoula_gap)
+clean <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/DataExtraction_polygons/missoula_clean.shp" %>% 
+  st_read()
+
+roads <- st_read(county_roads)
+plot(roads)
+
+mapview(clean)+ mapview()
+
+
+
+###############################################################################
+
 #  Exporting Maps                                                           ####
-
-
-
-
-
-
-
 ###############################################################################
