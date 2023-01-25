@@ -16,6 +16,7 @@ library(sf)
 library(tidyverse)
 library(mapview)
 library(ggpubr)
+library(foreach)
 
 #      Functions                                                            ####
 
@@ -188,36 +189,58 @@ t <- st_read(paste0(export_dir,"/",county_name,"_GAP_areas.shp"))
 
 mapview(t) + mapview(GAP_layer_final)
 ###############################################################################
-#   GAP Status: Road Cleaning                                               ####
-
-library(whitebox)
+#   GAP Status: Road Cleaning [DEV]                                         ####
 
 
-missoula_gap <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
-county_roads <- "1.Data/data_clean/RoadLayer/road_buffers.shp"
+missoula_gap_fp <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
+roads_combined_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/roads_combined.shp"
+roads_buffered_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/roads_buffered.shp"
 
-print(Sys.time())
-tictoc::tic()
-wbt_erase(
-  missoula_gap, 
-  county_roads, 
-  "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/DataExtraction_polygons/missoula_clean.shp"
-)
-tictoc::toc()
-print(Sys.time())
 
-dirty <- st_read(missoula_gap)
-clean <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/DataExtraction_polygons/missoula_clean.shp" %>% 
-  st_read()
+# Top 5 Roads
+roads <- missoula_roads %>% st_transform(5070)
 
-roads <- st_read(county_roads)
-plot(roads)
+gap_sf <- st_read(missoula_gap_fp) %>% st_transform(5070)
 
-mapview(clean)+ mapview()
+layer <- gap_sf
+
+sf_use_s2(F)
+
+print(paste0("Start Time: ",Sys.time()))
+
+log <- foreach(i = 1:nrow(roads),
+               .combine=rbind,
+               .errorhandling = "pass") %do% {
+                 
+                 road_sub <- roads[i,] %>% 
+                   st_buffer(dist = 50) %>% 
+                   st_combine() %>% 
+                   st_make_valid()
+                 
+                 layer <- st_difference(x = layer,
+                                        y = road_sub)
+                 
+                 return(data.frame(iteration = i,
+                                   time = Sys.time()))
+               }
+
+print(paste0("End Time: ",Sys.time()))
+
+sub_samp <- roads %>% sample_n(1000)
+
+
+
+
+
+mapview(layer) + mapview(sub_samp, color = "red")
+
+
+mapview(missoula_cadastral)+mapview(layer)
+
+mapview(layer,)
 
 
 
 ###############################################################################
-
 #  Exporting Maps                                                           ####
 ###############################################################################
