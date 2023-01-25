@@ -190,25 +190,28 @@ t <- st_read(paste0(export_dir,"/",county_name,"_GAP_areas.shp"))
 mapview(t) + mapview(GAP_layer_final)
 ###############################################################################
 #   GAP Status: Road Cleaning [DEV]                                         ####
-
+#      Filepaths to shapefiles                                              ####
 
 missoula_gap_fp <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
 roads_combined_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/roads_combined.shp"
 roads_buffered_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/roads_buffered.shp"
+cadastral_exemption_fp <- "1.Data\\data_clean\\MontanaCadastral\\CountyBasedSubset\\MontanaCadastral_Missoula_exception.shp"
 
+#      Eliminating Roads                                                    ####
 
-# Top 5 Roads
+# Reprojecting Layers to EPSG
 roads <- missoula_roads %>% st_transform(5070)
 
 gap_sf <- st_read(missoula_gap_fp) %>% st_transform(5070)
 
-layer <- gap_sf
+layer_gap <- gap_sf
 
+# Eliminating Roads from the GAP data
 sf_use_s2(F)
 
 print(paste0("Start Time: ",Sys.time()))
 
-log <- foreach(i = 1:nrow(roads),
+log_roads <- foreach(i = 1:nrow(roads),
                .combine=rbind,
                .errorhandling = "pass") %do% {
                  
@@ -217,7 +220,7 @@ log <- foreach(i = 1:nrow(roads),
                    st_combine() %>% 
                    st_make_valid()
                  
-                 layer <- st_difference(x = layer,
+                 layer_gap <- st_difference(x = layer_gap,
                                         y = road_sub)
                  
                  return(data.frame(iteration = i,
@@ -226,20 +229,61 @@ log <- foreach(i = 1:nrow(roads),
 
 print(paste0("End Time: ",Sys.time()))
 
+# Exporting Foreach Log
+write_csv(log_roads, 
+          "D:/Drive/Research/CPHR/CPHR_Workspace/3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_Missoula.csv")
+
+# Quality Check
 sub_samp <- roads %>% sample_n(1000)
 
+mapview(layer_gap) + mapview(sub_samp, color = "red")
+
+#      Eliminating Cadastral Data                                           ####
+#        Data                                                            ####
+
+# Importing Cadastral Data 
+cadastral_exemption_shp <- st_read(cadastral_exemption_fp) %>% 
+  st_transform(5070)
+
+#        Cadastral Relevancy                                                ####
+
+# Cluster Number
+cl <- makeCluster(4)
+registerDoParallel(cl)
+
+# Exporting Packages
+clusterEvalQ(cl,
+             {
+               library(tidyverse)
+               library(sf)
+               library(foreach)
+             })
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("cadastral_exemption_shp","layer_gap"), envir=environment())
 
 
+# Foreach Loop 
+print(paste0("Start Time: ",Sys.time()))
 
+cadastral_relevancy <- foreach(i = 1:nrow(cadastral_exemption_shp),
+                               .combine = rbind,
+                               .errorhandling = "pass") %dopar% {
+                                 
+                                 cad_sub <- cadastral_exemption_shp[i,]
+                                 intersect <- st_intersects(cad_sub,layer_gap,sparse = F)
+                                 
+                                 result <- cad_sub %>% mutate(relevant = (any(intersect) == T),
+                                                              .before = 1)
+                                 
+                                 return(result)
+                                 
+                               }
 
-mapview(layer) + mapview(sub_samp, color = "red")
+print(paste0("End Time: ",Sys.time()))
 
-
-mapview(missoula_cadastral)+mapview(layer)
-
-mapview(layer,)
-
-
+# Quality Check
+mapview(cadastral_relevancy)
 
 ###############################################################################
 #  Exporting Maps                                                           ####
