@@ -150,7 +150,7 @@ rm(layer)
 gc()
 
 ###############################################################################
-#   [Montana Cadastral Data]                                                ####
+#   [Montana Cadastral Data - Inclusion]                                    ####
 #      [Data Import]                                                        ####
 
 # Data Import
@@ -218,6 +218,75 @@ rm(CountyNames)
 # Cleaning RAM 
 gc()
 
+#   [Montana Cadastral Data - Exclusion]                                    ####
+#      [Data Import]                                                        ####
+
+# Data Import
+layer <- read_sf("1.Data\\data_raw\\MontanaCadastral\\Montana_Cadastral\\OWNERPARCEL.shp")
+
+#      [Projection Transformation]                                          ####
+
+# Checking Projection
+st_crs(layer)
+
+# Changing Projection
+layer <- st_transform(layer, crs = targetProj)
+
+#      [Subsetting Important Parcel Types]                                  ####
+
+# Listing Unique Parcel Types
+unique(layer$PropType)
+
+# Subsetting Parcels of Interest
+layer <- layer %>% filter(!(PropType %in% c("EP - Exempt Property",
+                                          "VAC_R - Vacant Land - Rural",
+                                          "VAC_U - Vacant Land - Urban",
+                                          "GOLF - Golf Course",
+                                          "MINE - Mining Claim",
+                                          "TP - Tribal Property",
+                                          "MC - Mining Claim",
+                                          "VU - Vacant Land Urban")))
+
+
+#      [Data Export]                                                        ####
+
+# Creating a list of unique Counties
+CountyNames <- unique(layer$CountyName)
+
+#        [All Data Export]                                                  ####
+
+st_write(obj = layer,
+         dsn = "1.Data\\data_clean\\MontanaCadastral\\MontanaCadastral_ParcelOwnership_exception.shp",
+         append = FALSE)
+
+#        [County export]                                                    ####
+
+# For Loop to do a per 
+
+for (i in 1:length(CountyNames)) {
+  
+  # Export Script
+  st_write(obj = subset(layer, layer$CountyName == CountyNames[i]),
+           dsn = paste0("1.Data\\data_clean\\MontanaCadastral\\CountyBasedSubset\\MontanaCadastral_",
+                        CountyNames[i],
+                        "_exception.shp"),
+           append = FALSE)
+  
+  # Iterator Tracker
+  print(i)
+}
+
+
+#      [Cleaning Environment and Memory]                                    ####
+
+# Cleaning Environment
+rm(layer) 
+rm(i) 
+rm(CountyNames)
+
+# Cleaning RAM 
+gc()
+
 ###############################################################################
 #   [Montana NLCD]                                                          ####
 #      [Data]                                                               ####
@@ -267,4 +336,3 @@ for (i in 1:length(raster_list)) {
 source("1.Scripts\\1.DataCleaning\\NDVI_calculation.R")
 
 ###############################################################################
-
