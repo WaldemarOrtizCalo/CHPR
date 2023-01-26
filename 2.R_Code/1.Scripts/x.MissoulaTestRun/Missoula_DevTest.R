@@ -17,6 +17,7 @@ library(tidyverse)
 library(mapview)
 library(ggpubr)
 library(foreach)
+library(doParallel)
 
 #      Functions                                                            ####
 
@@ -189,7 +190,7 @@ t <- st_read(paste0(export_dir,"/",county_name,"_GAP_areas.shp"))
 
 mapview(t) + mapview(GAP_layer_final)
 ###############################################################################
-#   GAP Status: Road Cleaning [DEV]                                         ####
+#   GAP Status Cleaning [DEV]                                               ####
 #      Filepaths to shapefiles                                              ####
 
 missoula_gap_fp <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
@@ -198,6 +199,7 @@ roads_buffered_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/r
 cadastral_exemption_fp <- "1.Data\\data_clean\\MontanaCadastral\\CountyBasedSubset\\MontanaCadastral_Missoula_exception.shp"
 
 #      Eliminating Roads                                                    ####
+#        Data                                                               ####
 
 # Reprojecting Layers to EPSG
 roads <- missoula_roads %>% st_transform(5070)
@@ -206,8 +208,10 @@ gap_sf <- st_read(missoula_gap_fp) %>% st_transform(5070)
 
 layer_gap <- gap_sf
 
+#        Eliminating Roads                                                  ####
+
 # Eliminating Roads from the GAP data
-sf_use_s2(F)
+sf_use_s2(T)
 
 print(paste0("Start Time: ",Sys.time()))
 
@@ -233,13 +237,25 @@ print(paste0("End Time: ",Sys.time()))
 write_csv(log_roads, 
           "D:/Drive/Research/CPHR/CPHR_Workspace/3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_Missoula.csv")
 
+# Exporting Layer Temp 
+sf_use_s2(T)
+
+data_export_road_clean <- st_collection_extract(layer_gap, "POLYGON")
+
+st_write(data_export_road_clean,
+         "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/temp_folder/layer_gap_roads.shp",
+         append = F)
+
 # Quality Check
 sub_samp <- roads %>% sample_n(1000)
 
-mapview(layer_gap) + mapview(sub_samp, color = "red")
+mapview(layer_gap) + mapview(sub_samp, color = "red") + mapview(data_export_road_clean, col.regions = "yellow")
 
 #      Eliminating Cadastral Data                                           ####
-#        Data                                                            ####
+#        Data                                                               ####
+
+# Importing gap layer without roads 
+layer_gap <- st_read("D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/temp_folder/layer_gap_roads.shp")
 
 # Importing Cadastral Data 
 cadastral_exemption_shp <- st_read(cadastral_exemption_fp) %>% 
@@ -264,6 +280,8 @@ clusterExport(cl=cl, varlist=c("cadastral_exemption_shp","layer_gap"), envir=env
 
 
 # Foreach Loop 
+sf_use_s2(F)
+
 print(paste0("Start Time: ",Sys.time()))
 
 cadastral_relevancy <- foreach(i = 1:nrow(cadastral_exemption_shp),
@@ -282,8 +300,66 @@ cadastral_relevancy <- foreach(i = 1:nrow(cadastral_exemption_shp),
 
 print(paste0("End Time: ",Sys.time()))
 
+# Exporting Layer Temp 
+sf_use_s2(T)
+st_write(cadastral_relevancy,
+         "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/temp_folder/cadastral_relevancy.shp",
+         append = F)
+
 # Quality Check
 mapview(cadastral_relevancy)
+
+#        Eliminating Cadastral                                              ####
+
+# Keeping only relevant cadastral datapoints
+cadastral_relevancy <- st_read("1.Data/temp_folder/cadastral_relevancy.shp")
+
+cadastry_relevant <- filter(cadastral_relevancy,relevant == T)
+
+layer_gap_road_cadastral_clean <- layer_gap
+
+# Eliminating Cadastral from the GAP data
+sf_use_s2(F)
+
+print(paste0("Start Time: ",Sys.time()))
+
+log_cadastral <- foreach(i = 1:nrow(cadastry_relevant),
+                         .combine=rbind,
+                         .errorhandling = "pass") %do% {
+                           
+                           cad_sub <- cadastry_relevant[i,] %>% 
+                             st_buffer(dist = 10) %>% 
+                             st_combine() %>% 
+                             st_make_valid()
+                           
+                           layer_gap_road_cadastral_clean <- st_difference(x = layer_gap_road_cadastral_clean,
+                                                                           y = cad_sub)
+                           
+                           return(data.frame(iteration = i,
+                                             time = Sys.time()))
+                         }
+
+print(paste0("End Time: ",Sys.time()))
+
+# Exporting Foreach Log
+write_csv(log_cadastral, 
+          "D:/Drive/Research/CPHR/CPHR_Workspace/3.Outputs/MissoulaDevTest/logs_countyscripts/log_cadastral_Missoula.csv")
+
+# Quality Check 
+mapview(layer_gap_road_cadastral_clean) + 
+  mapview(cadastry_relevant, col.regions = "orange") +
+  mapview(layer_gap, col.regions = "blue")
+
+# Reprojeccting Layer to WGS 84 
+gap_final <- st_transform(layer_gap_road_cadastral_clean, 4326) %>% 
+  st_write()
+
+# Exporting final layer 
+sf_use_s2(T)
+st_write(gap_final,
+         "1.Data/data_clean/gap_clean/missoula_gap_clean.shp",
+         append = F)
+
 
 ###############################################################################
 #  Exporting Maps                                                           ####
