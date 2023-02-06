@@ -45,8 +45,8 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
 
 #      Creating Buffered Layer                                              ####
 
-# Creating a 50m buffer 
-roads_buffered <- missoula_roads %>% st_buffer(50)
+# Creating a 20m buffer 
+roads_buffered <- missoula_roads %>% st_buffer(20)
 
 # Exporting
 st_write(obj = roads_buffered,
@@ -220,7 +220,7 @@ log_roads <- foreach(i = 1:nrow(roads),
                .errorhandling = "pass") %do% {
                  
                  road_sub <- roads[i,] %>% 
-                   st_buffer(dist = 50) %>% 
+                   st_buffer(dist = 20) %>% 
                    st_combine() %>% 
                    st_make_valid()
                  
@@ -328,7 +328,7 @@ log_cadastral <- foreach(i = 1:nrow(cadastry_relevant),
                          .errorhandling = "pass") %do% {
                            
                            cad_sub <- cadastry_relevant[i,] %>% 
-                             st_buffer(dist = 10) %>% 
+                            st_buffer(dist = 20) %>% 
                              st_combine() %>% 
                              st_make_valid()
                            
