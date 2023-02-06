@@ -150,7 +150,7 @@ t <- st_read(paste0(export_dir,"/",county_name,"_GAP_areas.shp"))
 
 mapview(t) + mapview(GAP_layer_final)
 ###############################################################################
-#   GAP Status Cleaning [DEV]                                               ####
+#   GAP Status Cleaning     ]                                               ####
 #      Filepaths to shapefiles                                              ####
 
 missoula_gap_fp <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
