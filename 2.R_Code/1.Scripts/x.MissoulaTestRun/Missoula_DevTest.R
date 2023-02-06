@@ -41,46 +41,6 @@ missoula_cadastral <- read_sf("1.Data\\data_clean\\MontanaCadastral\\MontanaCada
   filter(CountyName == "Missoula")
 
 ###############################################################################
-#  Road Buffer Layer Creation and Export                                    ####
-
-#      Creating Buffered Layer                                              ####
-
-# Creating a 20m buffer 
-roads_buffered <- missoula_roads %>% st_buffer(20)
-
-# Exporting
-st_write(obj = roads_buffered,
-         dsn = "1.Data/data_clean/RoadLayer/road_buffers.shp",
-         append = F)
-
-#      Creating and Exporting Maps                                          ####
-
-map_road <- ggplot() +
-  geom_sf(data = missoula_boundary,color = "black",size = 1) +
-  geom_sf(data = missoula_roads)+
-  theme_bw()
-
-ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_roads.png",
-       plot = map_road,
-       device = "png",
-       width = 8,
-       height = 6, 
-       units = "in")
-
-map_bufferedroads <- ggplot() +
-  geom_sf(data = missoula_boundary,color = "black",size = 1) +
-  geom_sf(data = roads_buffered)+
-  theme_bw()
-
-ggsave(filename = "3.Outputs/MissoulaDevTest/maps/missoula_bufferedroads.png",
-       plot = map_bufferedroads,
-       device = "png",
-       width = 8,
-       height = 6, 
-       units = "in")
-
-
-###############################################################################
 #   Protected Area Cleaning                                                 ####
 #      Making Maps of Protected Areas                                       ####
 
@@ -194,8 +154,6 @@ mapview(t) + mapview(GAP_layer_final)
 #      Filepaths to shapefiles                                              ####
 
 missoula_gap_fp <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
-roads_combined_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/roads_combined.shp"
-roads_buffered_fp <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/test_folder/roads_buffered.shp"
 cadastral_exemption_fp <- "1.Data\\data_clean\\MontanaCadastral\\CountyBasedSubset\\MontanaCadastral_Missoula_exception.shp"
 
 #      Eliminating Roads                                                    ####
