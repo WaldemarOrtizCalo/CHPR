@@ -126,17 +126,17 @@ GAP4_clean <- st_difference(GAP4,GAP3_combined) %>%
   st_difference(GAP1_combined)
 sf_use_s2(T)
 
-mapview(GAP1, col.region = "red")+ 
-  mapview(GAP2, col.region = "blue")+ 
-  mapview(GAP3, col.region = "yellow")+ 
-  mapview(GAP4, col.region = "green")+ 
-  mapview(GAP2_clean, col.region = "orange") +
-  mapview(GAP3_clean, col.region = "pink") +
-  mapview(GAP4_clean, col.region = "#EE30A7")
+# mapview(GAP1, col.region = "red")+ 
+#   mapview(GAP2, col.region = "blue")+ 
+#   mapview(GAP3, col.region = "yellow")+ 
+#   mapview(GAP4, col.region = "green")+ 
+#   mapview(GAP2_clean, col.region = "orange") +
+#   mapview(GAP3_clean, col.region = "pink") +
+#   mapview(GAP4_clean, col.region = "#EE30A7")
 
 GAP_layer_final <- bind_rows(GAP1,GAP2_clean,GAP3_clean,GAP4_clean)
 
-mapview(GAP_layer_final,zcol = "GAP_Sts")
+# mapview(GAP_layer_final,zcol = "GAP_Sts")
 #      Exporting Final Layer                                                ####
 
 export_dir <- "1.Data/data_clean/Montana_ProtectedAreas/county_based"
@@ -148,9 +148,9 @@ st_write(GAP_layer_final,
 
 t <- st_read(paste0(export_dir,"/",county_name,"_GAP_areas.shp"))
 
-mapview(t) + mapview(GAP_layer_final)
+# mapview(t) + mapview(GAP_layer_final)
 ###############################################################################
-#   GAP Status Cleaning     ]                                               ####
+#   GAP Status Cleaning                                                     ####
 #      Filepaths to shapefiles                                              ####
 
 missoula_gap_fp <- "1.Data/data_clean/Montana_ProtectedAreas/county_based/Missoula_GAP_areas.shp"
@@ -205,9 +205,9 @@ st_write(data_export_road_clean,
          append = F)
 
 # Quality Check
-sub_samp <- roads %>% sample_n(1000)
-
-mapview(layer_gap) + mapview(sub_samp, color = "red") + mapview(data_export_road_clean, col.regions = "yellow")
+# sub_samp <- roads %>% sample_n(1000)
+# 
+# mapview(layer_gap) + mapview(sub_samp, color = "red") + mapview(data_export_road_clean, col.regions = "yellow")
 
 #      Eliminating Cadastral Data                                           ####
 #        Data                                                               ####
@@ -265,7 +265,7 @@ st_write(cadastral_relevancy,
          append = F)
 
 # Quality Check
-mapview(cadastral_relevancy)
+# mapview(cadastral_relevancy)
 
 #        Eliminating Cadastral                                              ####
 
@@ -304,9 +304,9 @@ write_csv(log_cadastral,
           "3.Outputs/MissoulaDevTest/logs_countyscripts/log_cadastral_Missoula.csv")
 
 # Quality Check 
-mapview(layer_gap_road_cadastral_clean) + 
-  mapview(cadastry_relevant, col.regions = "orange") +
-  mapview(layer_gap, col.regions = "blue")
+# mapview(layer_gap_road_cadastral_clean) + 
+#   mapview(cadastry_relevant, col.regions = "orange") +
+#   mapview(layer_gap, col.regions = "blue")
 
 # Reprojeccting Layer to WGS 84 
 gap_final <- st_transform(layer_gap_road_cadastral_clean, 4326) %>% 
