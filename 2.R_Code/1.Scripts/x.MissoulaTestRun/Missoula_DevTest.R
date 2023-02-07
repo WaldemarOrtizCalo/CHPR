@@ -139,7 +139,7 @@ GAP_layer_final <- bind_rows(GAP1,GAP2_clean,GAP3_clean,GAP4_clean)
 mapview(GAP_layer_final,zcol = "GAP_Sts")
 #      Exporting Final Layer                                                ####
 
-export_dir <- "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/Montana_ProtectedAreas/county_based"
+export_dir <- "1.Data/data_clean/Montana_ProtectedAreas/county_based"
 county_name <- "Missoula"
 
 st_write(GAP_layer_final,
@@ -193,7 +193,7 @@ print(paste0("End Time: ",Sys.time()))
 
 # Exporting Foreach Log
 write_csv(log_roads, 
-          "D:/Drive/Research/CPHR/CPHR_Workspace/3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_Missoula.csv")
+          "3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_Missoula.csv")
 
 # Exporting Layer Temp 
 sf_use_s2(T)
@@ -201,7 +201,7 @@ sf_use_s2(T)
 data_export_road_clean <- st_collection_extract(layer_gap, "POLYGON")
 
 st_write(data_export_road_clean,
-         "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/temp_folder/layer_gap_roads.shp",
+         "1.Data/temp_folder/layer_gap_roads.shp",
          append = F)
 
 # Quality Check
@@ -213,7 +213,7 @@ mapview(layer_gap) + mapview(sub_samp, color = "red") + mapview(data_export_road
 #        Data                                                               ####
 
 # Importing gap layer without roads 
-layer_gap <- st_read("D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/temp_folder/layer_gap_roads.shp")
+layer_gap <- st_read("1.Data/temp_folder/layer_gap_roads.shp")
 
 # Importing Cadastral Data 
 cadastral_exemption_shp <- st_read(cadastral_exemption_fp) %>% 
@@ -261,7 +261,7 @@ print(paste0("End Time: ",Sys.time()))
 # Exporting Layer Temp 
 sf_use_s2(T)
 st_write(cadastral_relevancy,
-         "D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/temp_folder/cadastral_relevancy.shp",
+         "1.Data/temp_folder/cadastral_relevancy.shp",
          append = F)
 
 # Quality Check
@@ -301,7 +301,7 @@ print(paste0("End Time: ",Sys.time()))
 
 # Exporting Foreach Log
 write_csv(log_cadastral, 
-          "D:/Drive/Research/CPHR/CPHR_Workspace/3.Outputs/MissoulaDevTest/logs_countyscripts/log_cadastral_Missoula.csv")
+          "3.Outputs/MissoulaDevTest/logs_countyscripts/log_cadastral_Missoula.csv")
 
 # Quality Check 
 mapview(layer_gap_road_cadastral_clean) + 
@@ -317,7 +317,6 @@ sf_use_s2(T)
 st_write(gap_final,
          "1.Data/data_clean/gap_clean/missoula_gap_clean.shp",
          append = F)
-
 
 ###############################################################################
 #  Exporting Maps                                                           ####
