@@ -272,7 +272,7 @@ st_write(cadastral_relevancy,
 # Keeping only relevant cadastral datapoints
 cadastral_relevancy <- st_read("1.Data/temp_folder/cadastral_relevancy.shp")
 
-cadastry_relevant <- filter(cadastral_relevancy,relevant == T)
+cadastral_relevant <- filter(cadastral_relevancy,relevant == T)
 
 layer_gap_road_cadastral_clean <- layer_gap
 
@@ -281,11 +281,11 @@ sf_use_s2(F)
 
 print(paste0("Start Time: ",Sys.time()))
 
-log_cadastral <- foreach(i = 1:nrow(cadastry_relevant),
+log_cadastral <- foreach(i = 1:nrow(cadastral_relevant),
                          .combine=rbind,
                          .errorhandling = "pass") %do% {
                            
-                           cad_sub <- cadastry_relevant[i,] %>% 
+                           cad_sub <- cadastral_relevant[i,] %>% 
                             st_buffer(dist = 20) %>% 
                              st_combine() %>% 
                              st_make_valid()
@@ -305,18 +305,19 @@ write_csv(log_cadastral,
 
 # Quality Check 
 # mapview(layer_gap_road_cadastral_clean) + 
-#   mapview(cadastry_relevant, col.regions = "orange") +
+#   mapview(cadastral_relevant, col.regions = "orange") +
 #   mapview(layer_gap, col.regions = "blue")
 
 # Reprojeccting Layer to WGS 84 
-gap_final <- st_transform(layer_gap_road_cadastral_clean, 4326) %>% 
-  st_write()
+gap_final <- st_transform(layer_gap_road_cadastral_clean, 4326) 
 
 # Exporting final layer 
 sf_use_s2(T)
 st_write(gap_final,
          "1.Data/data_clean/gap_clean/missoula_gap_clean.shp",
          append = F)
+
+
 
 ###############################################################################
 #  Exporting Maps                                                           ####
