@@ -98,13 +98,11 @@ foreach(i = 1:length(county_list),
           
           # Roads
           county_roads <- montana_roads %>% 
-            st_intersection(county_boundary) %>% 
-            sample_n(1000)
+            st_intersection(county_boundary)
           
           # Cadastral 
           county_cadastral <- montana_cadastral %>% 
-            filter(CountyName == county_name) %>% 
-            sample_n(1000)
+            filter(CountyName == county_name) 
           
           #   GAP Cleaning: Overlapping Statuses                                      ####
           #      Filtering by Status                                                  ####

@@ -57,49 +57,35 @@ season_year_locator <- function(input_date,ref_sheet) {
 shp_montana <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp") %>% 
   vect()
 
-###############################################################################
-#   NDVI Calculation and Export [ RUN ONLY ONCE]                            ####
-#      Importing Data                                                       ####
 
-# NDVI List
-ndvi_list <- list.files("1.Data/data_raw/NDVI_Earthdata",
-                        pattern = ".hdf",
-                        full.names = T)
+# NDVI list and names
+ndvi_list <- list.files("1.Data/data_raw/NDVI_V2",
+                        pattern = ".tif",
+                        full.names = T) %>% 
+  str_subset(pattern = "_NDVI_")
 
-ndvi_names <- list.files("1.Data/data_raw/NDVI_Earthdata",
-                         pattern = ".hdf",
+ndvi_names <- list.files("1.Data/data_raw/NDVI_V2",
+                         pattern = ".tif",
                          full.names = F) %>% 
-  str_extract("A\\d\\d\\d\\d\\d\\d\\d") %>% 
-  str_remove("A") %>% unique()
+  str_extract("doy\\d\\d\\d\\d\\d\\d\\d") %>% 
+  str_remove("doy") %>% unique()
 
-
-#      NDVI Calculation                                                     ####
+###############################################################################
+#   NDVI Raster Cropping and Masking                                        ####
 
 # Export Directory
-export_dir <- "1.Data/data_clean/NDVI_MODIS"
+export_dir <- "1.Data/data_clean/NDVI"
 
-# Starting at 100 to resume.
+# Cropping and Export
 for (i in 1:length(ndvi_names)) {
   
   # Making a List of Rasters 
-  raster_list <- str_subset(ndvi_list,
-                            pattern = ndvi_names[[i]])
-  
-  # Creating the NIR layers
-  R_NIR_1 <- ndvi_list[1] %>% rast() %>% .[[5]]
-  R_red_1 <- ndvi_list[1] %>% rast() %>% .[[4]]
-  R_NIR_2 <- ndvi_list[2] %>% rast() %>% .[[5]]
-  R_red_2 <- ndvi_list[2] %>% rast() %>% .[[4]]
-  R_NIR_3 <- ndvi_list[3] %>% rast() %>% .[[5]]
-  R_red_3 <- ndvi_list[3] %>% rast() %>% .[[4]]
-  
-  # Calculating NDVI
-  ndvi_1 <- (R_NIR_1 - R_red_1)/(R_NIR_1 + R_red_1)
-  ndvi_2 <- (R_NIR_2 - R_red_2)/(R_NIR_2 + R_red_2)
-  ndvi_3 <- (R_NIR_3 - R_red_3)/(R_NIR_3 + R_red_3)
+  raster <- str_subset(ndvi_list,
+                       pattern = ndvi_names[[i]]) %>% 
+    rast()
   
   # Creating final NDVI layer
-  ndvi_final <- merge(ndvi_1,ndvi_2,ndvi_3) %>% 
+  ndvi_final <- raster %>% 
     project("EPSG:4326") %>% 
     mask(shp_montana) %>% 
     crop(shp_montana)
@@ -115,20 +101,17 @@ for (i in 1:length(ndvi_names)) {
   
 }
 
-# Clearing everything for further coding
-rm(list = ls())
-gc()
 ###############################################################################
 #   Summary Rasters - Yearly and Seasonal                                   ####
 #      Yearly Summaries                                                     ####
 #        Creating NDVI Master Database                                      ####
 
 # List of NDVI tiles
-ndvi_list <- list.files("1.Data/data_clean/NDVI_MODIS",
+ndvi_list <- list.files("1.Data/data_clean/NDVI",
                         full.names = T)
 
 # Extracting Dates 
-ndvi_dates <- list.files("1.Data/data_clean/NDVI_MODIS",
+ndvi_dates <- list.files("1.Data/data_clean/NDVI",
                          full.names = F) %>% 
   str_remove("ndvi_") %>% 
   str_remove(".tif") %>% 
@@ -138,20 +121,20 @@ ndvi_dates <- list.files("1.Data/data_clean/NDVI_MODIS",
 ndvi_database <- data.frame(filepath = ndvi_list,
                             dates = ndvi_dates) %>% 
   mutate(year = year(dates)) %>% 
-  filter(year != 2007)
+  filter(year != 2006)
 
 #        Processing NDVI layers                                             ####
 
 # Indicating Export Directory
-export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_yearly"
+export_dir <- "1.Data/data_clean/NDVI_summaries/summaries_yearly"
 
 # Making list of unique years
 years_unique <- unique(ndvi_database$year)
 
 for (i in 1:length(years_unique)) {
- 
+  
   # Extracting a certain year
-   target_year <- years_unique[i]
+  target_year <- years_unique[i]
   
   # Subsetting Database for target ndvi files
   target_layers <- ndvi_database %>% 
@@ -173,10 +156,9 @@ for (i in 1:length(years_unique)) {
   print(paste0(i, " out of ", length(years_unique), " completed"))
 }
 
+
 #      Seasonal Summaries                                                   ####
 #        Creating Seasonal Reference                                        ####
-
-
 #           Period Settings                                                 ####
 
 period_buffer <- 3
@@ -270,9 +252,9 @@ fall_matrix <- s_start %>% mutate(end_date = s_end)
 #           Season final                                                    ####
 
 seasonal_reference <- bind_rows(fall_matrix,
-                                 winter_matrix,
-                                 spring_matrix,
-                                 summer_matrix) %>% 
+                                winter_matrix,
+                                spring_matrix,
+                                summer_matrix) %>% 
   mutate(int = interval(start_date,end_date)) %>% 
   mutate(season_year = paste(season,year(start_date),sep = "_"),.after = season)
 
@@ -280,11 +262,11 @@ seasonal_reference <- bind_rows(fall_matrix,
 #        Creating NDVI Master Database                                      ####
 
 # List of NDVI tiles
-ndvi_list <- list.files("1.Data/data_clean/NDVI_MODIS",
+ndvi_list <- list.files("1.Data/data_clean/NDVI",
                         full.names = T)
 
 # Extracting Dates 
-ndvi_dates <- list.files("1.Data/data_clean/NDVI_MODIS",
+ndvi_dates <- list.files("1.Data/data_clean/NDVI",
                          full.names = F) %>% 
   str_remove("ndvi_") %>% 
   str_remove(".tif") %>% 
@@ -304,14 +286,10 @@ for (i in 1:nrow(ndvi_database)) {
   print(i)
 }
 
-
-
-
-
 #        Creating Raster Summaries                                          ####
 
 # Indicating Export Directory
-export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_seasonal" 
+export_dir <- "1.Data/data_clean/NDVI_summaries/summaries_seasonal" 
 
 # Create a list of unique seasons
 seasons_unique <- ndvi_database$season %>% unique()
@@ -344,16 +322,18 @@ for (i in 1:length(seasons_unique)) {
 ###############################################################################
 #   Summary Rasters - Overall Yearly and Seasonal (2008-2019)               ####
 #      Overall: Yearly                                                      ####
-
 # Export Directory 
-export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_yearly_overall"
+export_dir <- "1.Data/data_clean/NDVI_summaries/summaries_yearly_overall"
 
 # Making list of tiles
-ndvi_stack <- list.files("3.Outputs/Cindy_NDVI_Database/summaries_yearly",
+ndvi_stack <- list.files("1.Data/data_clean/NDVI_summaries/summaries_yearly",
                          full.names = T) %>% 
+  str_subset('2006',negate = T) %>% 
+  str_subset('2007',negate = T) %>% 
   str_subset('2020',negate = T) %>% 
   str_subset('2021',negate = T) %>% 
-  str_subset('2022',negate = T) %>% rast()
+  str_subset('2022',negate = T) %>%
+  str_subset('2023',negate = T) %>% rast()
 
 # Summarizing
 yearly_summary <- app(ndvi_stack,mean)
@@ -364,19 +344,20 @@ writeRaster(yearly_summary,
                               "/ndvi_avg_yr_2008_2019_250m.tif"),
             overwrite = T)
 
-
-
 #      Overall: Seasonal                                                    ####
 
 # Export Directory 
-export_dir <- "3.Outputs/Cindy_NDVI_Database/summaries_seasonal_overall"
+export_dir <- "1.Data/data_clean/NDVI_summaries/summaries_seasonal_overall"
 
 # Making list of tiles
-ndvi_stack <- list.files("3.Outputs/Cindy_NDVI_Database/summaries_seasonal",
+ndvi_stack <- list.files("1.Data/data_clean/NDVI_summaries/summaries_seasonal",
                          full.names = T) %>% 
+  str_subset('2006',negate = T) %>% 
+  str_subset('2007',negate = T) %>% 
   str_subset('2020',negate = T) %>% 
   str_subset('2021',negate = T) %>% 
-  str_subset('2022',negate = T)
+  str_subset('2022',negate = T) %>%
+  str_subset('2023',negate = T) 
 
 # Season list
 season_list <- c("winter",
