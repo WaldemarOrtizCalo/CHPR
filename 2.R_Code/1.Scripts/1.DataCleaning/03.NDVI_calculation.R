@@ -59,12 +59,12 @@ shp_montana <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoun
 
 
 # NDVI list and names
-ndvi_list <- list.files("1.Data/data_raw/NDVI_V2",
+ndvi_list <- list.files("1.Data/data_raw/NDVI",
                         pattern = ".tif",
                         full.names = T) %>% 
   str_subset(pattern = "_NDVI_")
 
-ndvi_names <- list.files("1.Data/data_raw/NDVI_V2",
+ndvi_names <- list.files("1.Data/data_raw/NDVI",
                          pattern = ".tif",
                          full.names = F) %>% 
   str_extract("doy\\d\\d\\d\\d\\d\\d\\d") %>% 
@@ -276,7 +276,7 @@ ndvi_dates <- list.files("1.Data/data_clean/NDVI",
 ndvi_database <- data.frame(filepath = ndvi_list,
                             date = ndvi_dates) %>% 
   mutate(year = year(date)) %>% 
-  filter(year != 2007) %>% 
+  filter(year != 2006) %>% 
   mutate(season = NA) 
 
 # Assigning Season_year value
@@ -559,7 +559,7 @@ ndvi_dates <- list.files("1.Data/data_clean/NDVI",
 ndvi_database <- data.frame(filepath = ndvi_list,
                             date = ndvi_dates) %>% 
   mutate(year = year(date)) %>% 
-  filter(year != 2007) %>% 
+  filter(year != 2006) %>% 
   mutate(season = NA) 
 
 # Assigning Season_year value
@@ -730,7 +730,7 @@ for (i in 1:length(years_unique)) {
 period_buffer <- 3
 
 study_period_start <- min(unique(ndvi_database$year))- period_buffer
-study_period_end <- min(unique(ndvi_database$year))+ period_buffer
+study_period_end <- max(unique(ndvi_database$year))+ period_buffer
 
 #           Season 1: Winter                                                ####
 
@@ -842,7 +842,7 @@ ndvi_dates <- list.files("1.Data/data_clean/NDVI",
 ndvi_database <- data.frame(filepath = ndvi_list,
                             date = ndvi_dates) %>% 
   mutate(year = year(date)) %>% 
-  filter(year != 2007) %>% 
+  filter(year != 2006) %>% 
   mutate(season = NA) 
 
 # Assigning Season_year value
