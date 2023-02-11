@@ -143,7 +143,7 @@ for (i in 1:length(years_unique)) {
   
   # Stacking NDVI tiles and summarizing across
   ndvi_summary <- rast(target_layers) %>% 
-    app(fun=mean)
+    app(fun=mean,na.rm = T)
   
   # Exporting NDVI summary raster
   writeRaster(ndvi_summary,
@@ -301,12 +301,12 @@ for (i in 1:length(seasons_unique)) {
   
   # Subsetting Database for target ndvi files
   target_layers <- ndvi_database %>% 
-    filter(season == seasons_unique[1]) %>% 
+    filter(season == target_season) %>% 
     .$filepath
   
   # Stacking NDVI tiles and summarizing across
   ndvi_summary <- rast(target_layers) %>% 
-    app(fun=mean)
+    app(fun=mean,na.rm = T)
   
   # Exporting NDVI summary raster
   writeRaster(ndvi_summary,
@@ -335,7 +335,7 @@ ndvi_stack <- list.files("1.Data/data_clean/NDVI_summaries/summaries_yearly",
   str_subset('2023',negate = T) %>% rast()
 
 # Summarizing
-yearly_summary <- app(ndvi_stack,mean)
+yearly_summary <- app(ndvi_stack,mean,na.rm = T)
 
 # Export
 writeRaster(yearly_summary,
@@ -372,7 +372,7 @@ for (i in 1:length(season_list)) {
     rast()
   
   # Summarizing
-  seasonal_summary <- app(stack,mean)
+  seasonal_summary <- app(stack,mean,na.rm = T)
   
   # Export
   writeRaster(seasonal_summary,
@@ -427,7 +427,7 @@ for (i in 1:length(years_unique)) {
   
   # Stacking NDVI tiles and summarizing across
   ndvi_summary <- rast(target_layers) %>% 
-    app(fun=max)
+    app(fun=max,na.rm = T)
   
   # Exporting NDVI summary raster
   writeRaster(ndvi_summary,
@@ -584,12 +584,12 @@ for (i in 1:length(seasons_unique)) {
   
   # Subsetting Database for target ndvi files
   target_layers <- ndvi_database %>% 
-    filter(season == seasons_unique[1]) %>% 
+    filter(season == target_season) %>% 
     .$filepath
   
   # Stacking NDVI tiles and summarizing across
   ndvi_summary <- rast(target_layers) %>% 
-    app(fun=max)
+    app(fun=max,na.rm = T)
   
   # Exporting NDVI summary raster
   writeRaster(ndvi_summary,
@@ -618,7 +618,7 @@ ndvi_stack <- list.files("1.Data/data_clean/NDVI_summaries/summaries_yearly",
   str_subset('2023',negate = T) %>% rast()
 
 # Summarizing
-yearly_summary <- app(ndvi_stack,max)
+yearly_summary <- app(ndvi_stack,max,na.rm = T)
 
 # Export
 writeRaster(yearly_summary,
@@ -655,7 +655,7 @@ for (i in 1:length(season_list)) {
     rast()
   
   # Summarizing
-  seasonal_summary <- app(stack,max)
+  seasonal_summary <- app(stack,max,na.rm = T)
   
   # Export
   writeRaster(seasonal_summary,
@@ -710,7 +710,7 @@ for (i in 1:length(years_unique)) {
   
   # Stacking NDVI tiles and summarizing across
   ndvi_summary <- rast(target_layers) %>% 
-    app(fun=min)
+    app(fun=min,na.rm = T)
   
   # Exporting NDVI summary raster
   writeRaster(ndvi_summary,
@@ -867,12 +867,12 @@ for (i in 1:length(seasons_unique)) {
   
   # Subsetting Database for target ndvi files
   target_layers <- ndvi_database %>% 
-    filter(season == seasons_unique[1]) %>% 
+    filter(season == target_season) %>% 
     .$filepath
   
   # Stacking NDVI tiles and summarizing across
   ndvi_summary <- rast(target_layers) %>% 
-    app(fun=min)
+    app(fun=min,na.rm = T)
   
   # Exporting NDVI summary raster
   writeRaster(ndvi_summary,
@@ -901,7 +901,7 @@ ndvi_stack <- list.files("1.Data/data_clean/NDVI_summaries/summaries_yearly",
   str_subset('2023',negate = T) %>% rast()
 
 # Summarizing
-yearly_summary <- app(ndvi_stack,min)
+yearly_summary <- app(ndvi_stack,min,na.rm = T)
 
 # Export
 writeRaster(yearly_summary,
@@ -938,7 +938,7 @@ for (i in 1:length(season_list)) {
     rast()
   
   # Summarizing
-  seasonal_summary <- app(stack,min)
+  seasonal_summary <- app(stack,min,na.rm = T)
   
   # Export
   writeRaster(seasonal_summary,
