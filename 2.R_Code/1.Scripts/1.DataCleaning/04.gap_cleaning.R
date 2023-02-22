@@ -272,3 +272,528 @@ foreach(i = 1:length(county_list),
         }
 
 ###############################################################################
+#   Troubleshooting incomplete cases                                        ####
+#      Identifying incomplete cases                                         ####
+
+gap_completed <- list.files("1.Data/data_clean/gap_clean",
+                        full.names = F,
+                        pattern = ".shp") %>% 
+  str_remove("gapclean_") %>% 
+  str_remove(".shp")
+
+gap_incompleted <- setdiff(county_list,gap_completed)
+
+#      Troubleshooting Flathead                                             ####
+
+#        Subsetting Data                                                    ####
+
+# County Name
+county_name <- gap_incompleted[[1]]
+
+# County 
+county_boundary <- county_boundaries %>% 
+  filter(NAME == county_name) 
+
+# Protected Areas
+county_protectedareas <- protected_areas %>% 
+  st_make_valid() %>% 
+  st_intersection(county_boundary) 
+
+# Roads
+county_roads <- montana_roads %>% 
+  st_intersection(county_boundary)
+
+# Cadastral 
+county_cadastral <- montana_cadastral %>% 
+  filter(CountyName == county_name)
+
+#        Cleaning Gap Statuses                                              ####
+
+GAP1 <- county_protectedareas %>%  filter(GAP_Sts == "1") 
+GAP2 <- county_protectedareas %>%  filter(GAP_Sts == "2")
+GAP3 <- county_protectedareas %>%  filter(GAP_Sts == "3")
+GAP4 <- county_protectedareas %>%  filter(GAP_Sts == "4")
+
+GAP1_combined <- GAP1 %>% st_combine() %>% st_make_valid()
+GAP2_combined <- GAP2 %>% st_combine() %>% st_make_valid()
+GAP3_combined <- GAP3 %>% st_combine() %>% st_make_valid()
+GAP4_combined <- GAP4 %>% st_combine() %>% st_make_valid()
+
+sf_use_s2(F)
+GAP2_clean <- st_difference(GAP2,GAP1_combined)
+GAP3_clean <- st_difference(GAP3,GAP2_combined)%>% 
+  st_difference(GAP1_combined)
+GAP4_clean <- st_difference(GAP4,GAP3_combined) %>% 
+  st_difference(GAP2_combined) %>% 
+  st_difference(GAP1_combined)
+sf_use_s2(T)
+
+GAP_layer_base <- bind_rows(GAP1,GAP2_clean,GAP3_clean,GAP4_clean) 
+#        Cleaning Roads                                                     ####
+
+layer_gap_cleanroads <- GAP_layer_base %>% st_transform(5070)
+county_roads <- county_roads %>% st_transform(5070)
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("county_roads","layer_gap_cleanroads"), envir=environment())
+
+sf_use_s2(F)
+
+road_relevancy <- foreach(a = 1:nrow(county_roads),
+                          .combine = rbind,
+                          .errorhandling = "pass") %dopar% {
+                            
+                            rd_sub <- county_roads[a,]
+                            intersect <- st_intersects(rd_sub,layer_gap_cleanroads,sparse = F)
+                            
+                            result <- rd_sub %>% mutate(relevant = (any(intersect) == T),
+                                                        .before = 1)
+                            
+                            return(result)
+                            
+                          }
+
+# Keeping only relevant roads
+county_roads_relevant <-  filter(road_relevancy,relevant == T)
+
+# Eliminating Roads from the GAP data
+
+log_roads <- foreach(b = 1:nrow(county_roads_relevant),
+                     .combine=rbind,
+                     .errorhandling = "pass") %do% {
+                       
+                       road_sub <- county_roads_relevant[b,] %>% 
+                         st_buffer(dist = buffer_dist) %>% 
+                         st_combine() %>% 
+                         st_make_valid()
+                       
+                       layer_gap_cleanroads <- st_difference(x = layer_gap_cleanroads,
+                                                             y = road_sub)
+                       
+                       return(data.frame(iteration = b,
+                                         time = Sys.time()))
+                     }
+
+# Exporting Foreach Log
+write_csv(log_roads, 
+          file = paste0("3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_",county_name,".csv"))
+
+# Exporting Layer Temp 
+sf_use_s2(T)
+
+layer_gap_cleanroads <- st_collection_extract(layer_gap_cleanroads, "POLYGON")
+
+
+#        Cleaning Cadastral                                                 ####
+
+layer_gap_cleanroads_cleancadastral <- layer_gap_cleanroads
+cadastral_exemption_shp <- county_cadastral %>% st_transform(5070)
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("cadastral_exemption_shp","layer_gap_cleanroads_cleancadastral"), envir=environment())
+
+# Foreach Loop 
+sf_use_s2(F)
+
+cadastral_relevancy <- foreach(c = 1:nrow(cadastral_exemption_shp),
+                               .combine = rbind,
+                               .errorhandling = "pass") %dopar% {
+                                 
+                                 cad_sub <- cadastral_exemption_shp[c,]
+                                 intersect <- st_intersects(cad_sub,layer_gap_cleanroads_cleancadastral,sparse = F)
+                                 
+                                 result <- cad_sub %>% mutate(relevant = (any(intersect) == T),
+                                                              .before = 1)
+                                 
+                                 return(result)
+                                 
+                               }
+
+
+# Keeping only relevant cadastral datapoints
+cadastral_relevant <- filter(cadastral_relevancy,relevant == T)
+
+# Eliminating Cadastral from the GAP data
+sf_use_s2(F)
+
+log_cadastral <- foreach(d = 1:nrow(cadastral_relevant),
+                         .combine=rbind,
+                         .errorhandling = "pass") %do% {
+                           
+                           cad_sub <- cadastral_relevant[d,] %>% 
+                             st_buffer(buffer_dist) %>% 
+                             st_combine() %>% 
+                             st_make_valid()
+                           
+                           layer_gap_cleanroads_cleancadastral <- st_difference(x = layer_gap_cleanroads_cleancadastral,
+                                                                                y = cad_sub)
+                           
+                           return(data.frame(iteration = d,
+                                             time = Sys.time()))
+                         }
+
+# Exporting Foreach Log
+write_csv(log_cadastral, 
+          file = paste0("3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_cadastral_",county_name,".csv"))
+#        Export                                                             ####
+
+# Reprojeccting Layer to WGS 84 
+gap_final <- st_transform(layer_gap_cleanroads_cleancadastral, 4326) %>%  
+  st_collection_extract("POLYGON") %>% 
+  mutate(polygonID = paste0(county_name,"_",1:nrow(.)),
+         .before = 1) %>% 
+  mutate("area_hectares" = (as.numeric(st_area(.))/10000))
+
+# Exporting final layer 
+sf_use_s2(T)
+
+st_write(gap_final,
+         dsn = paste0("1.Data/data_clean/gap_clean/gapclean_",county_name,".shp"),
+         append = F)
+
+
+mapview(cadastral_relevant)
+
+#      Troubleshooting Lewis and Clark                                      ####
+
+#        Subsetting Data                                                    ####
+
+# County Name
+county_name <- gap_incompleted[[2]]
+
+# County 
+county_boundary <- county_boundaries %>% 
+  filter(NAME == county_name) 
+
+# Protected Areas
+county_protectedareas <- protected_areas %>% 
+  st_make_valid() %>% 
+  st_intersection(county_boundary) 
+
+# Roads
+county_roads <- montana_roads %>% 
+  st_intersection(county_boundary)
+
+# Cadastral 
+county_cadastral <- montana_cadastral %>% 
+  filter(CountyName == county_name)
+
+#        Cleaning Gap Statuses                                              ####
+
+GAP1 <- county_protectedareas %>%  filter(GAP_Sts == "1") 
+GAP2 <- county_protectedareas %>%  filter(GAP_Sts == "2")
+GAP3 <- county_protectedareas %>%  filter(GAP_Sts == "3")
+GAP4 <- county_protectedareas %>%  filter(GAP_Sts == "4")
+
+GAP1_combined <- GAP1 %>% st_combine() %>% st_make_valid()
+GAP2_combined <- GAP2 %>% st_combine() %>% st_make_valid()
+GAP3_combined <- GAP3 %>% st_combine() %>% st_make_valid()
+GAP4_combined <- GAP4 %>% st_combine() %>% st_make_valid()
+
+sf_use_s2(F)
+GAP2_clean <- st_difference(GAP2,GAP1_combined)
+GAP3_clean <- st_difference(GAP3,GAP2_combined)%>% 
+  st_difference(GAP1_combined)
+GAP4_clean <- st_difference(GAP4,GAP3_combined) %>% 
+  st_difference(GAP2_combined) %>% 
+  st_difference(GAP1_combined)
+sf_use_s2(T)
+
+GAP_layer_base <- bind_rows(GAP1,GAP2_clean,GAP3_clean,GAP4_clean) 
+#        Cleaning Roads                                                     ####
+
+layer_gap_cleanroads <- GAP_layer_base %>% st_transform(5070) %>% st_make_valid()
+county_roads <- county_roads %>% st_transform(5070)
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("county_roads","layer_gap_cleanroads"), envir=environment())
+
+sf_use_s2(F)
+
+road_relevancy <- foreach(a = 1:nrow(county_roads),
+                          .combine = rbind,
+                          .errorhandling = "pass") %dopar% {
+                            
+                            rd_sub <- county_roads[a,]
+                            intersect <- st_intersects(rd_sub,layer_gap_cleanroads,sparse = F)
+                            
+                            result <- rd_sub %>% mutate(relevant = (any(intersect) == T),
+                                                        .before = 1)
+                            
+                            return(result)
+                            
+                          }
+
+# Keeping only relevant roads
+county_roads_relevant <-  filter(road_relevancy,relevant == T)
+
+# Eliminating Roads from the GAP data
+
+log_roads <- foreach(b = 1:nrow(county_roads_relevant),
+                     .combine=rbind,
+                     .errorhandling = "pass") %do% {
+                       
+                       road_sub <- county_roads_relevant[b,] %>% 
+                         st_buffer(dist = buffer_dist) %>% 
+                         st_combine() %>% 
+                         st_make_valid()
+                       
+                       layer_gap_cleanroads <- st_difference(x = layer_gap_cleanroads,
+                                                             y = road_sub)
+                       
+                       return(data.frame(iteration = b,
+                                         time = Sys.time()))
+                     }
+
+# Exporting Foreach Log
+write_csv(log_roads, 
+          file = paste0("3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_",county_name,".csv"))
+
+# Exporting Layer Temp 
+sf_use_s2(T)
+
+layer_gap_cleanroads <- st_collection_extract(layer_gap_cleanroads, "POLYGON")
+
+
+#        Cleaning Cadastral                                                 ####
+
+layer_gap_cleanroads_cleancadastral <- layer_gap_cleanroads
+cadastral_exemption_shp <- county_cadastral %>% st_transform(5070)
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("cadastral_exemption_shp","layer_gap_cleanroads_cleancadastral"), envir=environment())
+
+# Foreach Loop 
+sf_use_s2(F)
+
+cadastral_relevancy <- foreach(c = 1:nrow(cadastral_exemption_shp),
+                               .combine = rbind,
+                               .errorhandling = "pass") %dopar% {
+                                 
+                                 cad_sub <- cadastral_exemption_shp[c,]
+                                 intersect <- st_intersects(cad_sub,layer_gap_cleanroads_cleancadastral,sparse = F)
+                                 
+                                 result <- cad_sub %>% mutate(relevant = (any(intersect) == T),
+                                                              .before = 1)
+                                 
+                                 return(result)
+                                 
+                               }
+
+
+# Keeping only relevant cadastral datapoints
+cadastral_relevant <- filter(cadastral_relevancy,relevant == T)
+
+# Eliminating Cadastral from the GAP data
+sf_use_s2(F)
+
+log_cadastral <- foreach(d = 1:nrow(cadastral_relevant),
+                         .combine=rbind,
+                         .errorhandling = "pass") %do% {
+                           
+                           cad_sub <- cadastral_relevant[d,] %>% 
+                             st_buffer(buffer_dist) %>% 
+                             st_combine() %>% 
+                             st_make_valid()
+                           
+                           layer_gap_cleanroads_cleancadastral <- st_difference(x = layer_gap_cleanroads_cleancadastral,
+                                                                                y = cad_sub)
+                           
+                           return(data.frame(iteration = d,
+                                             time = Sys.time()))
+                         }
+
+# Exporting Foreach Log
+write_csv(log_cadastral, 
+          file = paste0("3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_cadastral_",county_name,".csv"))
+#        Export                                                             ####
+
+# Reprojeccting Layer to WGS 84 
+gap_final <- st_transform(layer_gap_cleanroads_cleancadastral, 4326) %>%  
+  st_collection_extract("POLYGON") %>% 
+  mutate(polygonID = paste0(county_name,"_",1:nrow(.)),
+         .before = 1) %>% 
+  mutate("area_hectares" = (as.numeric(st_area(.))/10000))
+
+# Exporting final layer 
+sf_use_s2(T)
+
+st_write(gap_final,
+         dsn = paste0("1.Data/data_clean/gap_clean/gapclean_",county_name,".shp"),
+         append = F)
+
+
+mapview(cadastral_relevant)
+
+#      Troubleshooting Park                                                 ####
+
+#        Subsetting Data                                                    ####
+
+# County Name
+county_name <- gap_incompleted[[3]]
+
+# County 
+county_boundary <- county_boundaries %>% 
+  filter(NAME == county_name) 
+
+# Protected Areas
+county_protectedareas <- protected_areas %>% 
+  st_make_valid() %>% 
+  st_intersection(county_boundary) 
+
+# Roads
+county_roads <- montana_roads %>% 
+  st_intersection(county_boundary)
+
+# Cadastral 
+county_cadastral <- montana_cadastral %>% 
+  filter(CountyName == county_name)
+
+#        Cleaning Gap Statuses                                              ####
+
+GAP1 <- county_protectedareas %>%  filter(GAP_Sts == "1") 
+GAP2 <- county_protectedareas %>%  filter(GAP_Sts == "2")
+GAP3 <- county_protectedareas %>%  filter(GAP_Sts == "3")
+GAP4 <- county_protectedareas %>%  filter(GAP_Sts == "4")
+
+GAP1_combined <- GAP1 %>% st_combine() %>% st_make_valid()
+GAP2_combined <- GAP2 %>% st_combine() %>% st_make_valid()
+GAP3_combined <- GAP3 %>% st_combine() %>% st_make_valid()
+GAP4_combined <- GAP4 %>% st_combine() %>% st_make_valid()
+
+sf_use_s2(F)
+GAP2_clean <- st_difference(GAP2,GAP1_combined)
+GAP3_clean <- st_difference(GAP3,GAP2_combined)%>% 
+  st_difference(GAP1_combined)
+GAP4_clean <- st_difference(GAP4,GAP3_combined) %>% 
+  st_difference(GAP2_combined) %>% 
+  st_difference(GAP1_combined)
+sf_use_s2(T)
+
+GAP_layer_base <- bind_rows(GAP1,GAP2_clean,GAP3_clean,GAP4_clean) 
+#        Cleaning Roads                                                     ####
+
+layer_gap_cleanroads <- GAP_layer_base %>% st_transform(5070)
+county_roads <- county_roads %>% st_transform(5070)
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("county_roads","layer_gap_cleanroads"), envir=environment())
+
+sf_use_s2(F)
+
+road_relevancy <- foreach(a = 1:nrow(county_roads),
+                          .combine = rbind,
+                          .errorhandling = "pass") %dopar% {
+                            
+                            rd_sub <- county_roads[a,]
+                            intersect <- st_intersects(rd_sub,layer_gap_cleanroads,sparse = F)
+                            
+                            result <- rd_sub %>% mutate(relevant = (any(intersect) == T),
+                                                        .before = 1)
+                            
+                            return(result)
+                            
+                          }
+
+# Keeping only relevant roads
+county_roads_relevant <-  filter(road_relevancy,relevant == T)
+
+# Eliminating Roads from the GAP data
+
+log_roads <- foreach(b = 1:nrow(county_roads_relevant),
+                     .combine=rbind,
+                     .errorhandling = "pass") %do% {
+                       
+                       road_sub <- county_roads_relevant[b,] %>% 
+                         st_buffer(dist = buffer_dist) %>% 
+                         st_combine() %>% 
+                         st_make_valid()
+                       
+                       layer_gap_cleanroads <- st_difference(x = layer_gap_cleanroads,
+                                                             y = road_sub)
+                       
+                       return(data.frame(iteration = b,
+                                         time = Sys.time()))
+                     }
+
+# Exporting Foreach Log
+write_csv(log_roads, 
+          file = paste0("3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_",county_name,".csv"))
+
+# Exporting Layer Temp 
+sf_use_s2(T)
+
+layer_gap_cleanroads <- st_collection_extract(layer_gap_cleanroads, "POLYGON")
+
+
+#        Cleaning Cadastral                                                 ####
+
+layer_gap_cleanroads_cleancadastral <- layer_gap_cleanroads
+cadastral_exemption_shp <- county_cadastral %>% st_transform(5070)
+
+# Exporting data to clusters
+clusterExport(cl=cl, varlist=c("cadastral_exemption_shp","layer_gap_cleanroads_cleancadastral"), envir=environment())
+
+# Foreach Loop 
+sf_use_s2(F)
+
+cadastral_relevancy <- foreach(c = 1:nrow(cadastral_exemption_shp),
+                               .combine = rbind,
+                               .errorhandling = "pass") %dopar% {
+                                 
+                                 cad_sub <- cadastral_exemption_shp[c,]
+                                 intersect <- st_intersects(cad_sub,layer_gap_cleanroads_cleancadastral,sparse = F)
+                                 
+                                 result <- cad_sub %>% mutate(relevant = (any(intersect) == T),
+                                                              .before = 1)
+                                 
+                                 return(result)
+                                 
+                               }
+
+
+# Keeping only relevant cadastral datapoints
+cadastral_relevant <- filter(cadastral_relevancy,relevant == T)
+
+# Eliminating Cadastral from the GAP data
+sf_use_s2(F)
+
+log_cadastral <- foreach(d = 1:nrow(cadastral_relevant),
+                         .combine=rbind,
+                         .errorhandling = "pass") %do% {
+                           
+                           cad_sub <- cadastral_relevant[d,] %>% 
+                             st_buffer(buffer_dist) %>% 
+                             st_combine() %>% 
+                             st_make_valid()
+                           
+                           layer_gap_cleanroads_cleancadastral <- st_difference(x = layer_gap_cleanroads_cleancadastral,
+                                                                                y = cad_sub)
+                           
+                           return(data.frame(iteration = d,
+                                             time = Sys.time()))
+                         }
+
+# Exporting Foreach Log
+write_csv(log_cadastral, 
+          file = paste0("3.Outputs/MissoulaDevTest/logs_countyscripts/log_roads_cadastral_",county_name,".csv"))
+#        Export                                                             ####
+
+# Reprojeccting Layer to WGS 84 
+gap_final <- st_transform(layer_gap_cleanroads_cleancadastral, 4326) %>%  
+  st_collection_extract("POLYGON") %>% 
+  mutate(polygonID = paste0(county_name,"_",1:nrow(.)),
+         .before = 1) %>% 
+  mutate("area_hectares" = (as.numeric(st_area(.))/10000))
+
+# Exporting final layer 
+sf_use_s2(T)
+
+st_write(gap_final,
+         dsn = paste0("1.Data/data_clean/gap_clean/gapclean_",county_name,".shp"),
+         append = F)
+
+
+mapview(cadastral_relevant)
+
+###############################################################################
