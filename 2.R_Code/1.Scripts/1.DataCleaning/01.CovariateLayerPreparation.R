@@ -245,7 +245,8 @@ layer <- layer %>% filter(!(PropType %in% c("EP - Exempt Property",
                                           "MINE - Mining Claim",
                                           "TP - Tribal Property",
                                           "MC - Mining Claim",
-                                          "VU - Vacant Land Urban")))
+                                          "VU - Vacant Land Urban",
+                                          NA)))
 
 
 #      [Data Export]                                                        ####
