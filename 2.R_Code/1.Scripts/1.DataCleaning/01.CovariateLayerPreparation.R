@@ -337,3 +337,59 @@ for (i in 1:length(raster_list)) {
 source("1.Scripts\\1.DataCleaning\\NDVI_calculation.R")
 
 ###############################################################################
+#   [Montana Mobility Report]                                               ####
+
+# Import Mobility Report
+Mobility_Report <- list.files("1.Data/data_raw/GoogleMobilityReports",
+                              pattern = "US",
+                              full.names = T) %>% lapply(read_csv) %>% bind_rows()
+
+# Montana Counties 
+county_boundaries <- st_read("1.Data/data_clean/MontanaBoundaries/MontanaCountyBoundaries.shp") %>% 
+  mutate(NAME = str_replace(NAME,"&", "and")) %>% 
+  rename(county = NAME)
+
+# Making Monthly Summaries
+mobilityreport_montana <- Mobility_Report %>% 
+  filter(sub_region_1 == "Montana") %>% 
+  drop_na(sub_region_2) %>% 
+  rename(state = sub_region_1,
+         county = sub_region_2) %>% 
+  mutate(county = str_remove(county," County")) %>% 
+  mutate(year = year(date),.after = date) %>% 
+  mutate(month = month(date),.after = year) %>% 
+  group_by(county,year,month) %>% 
+  summarise(retail_and_recreation_percent_change_from_baseline = mean(retail_and_recreation_percent_change_from_baseline),
+            grocery_and_pharmacy_percent_change_from_baseline = mean(grocery_and_pharmacy_percent_change_from_baseline),
+            parks_percent_change_from_baseline = mean(parks_percent_change_from_baseline),
+            transit_stations_percent_change_from_baseline = mean(transit_stations_percent_change_from_baseline),
+            workplaces_percent_change_from_baseline = mean(workplaces_percent_change_from_baseline),
+            residential_percent_change_from_baseline = mean(residential_percent_change_from_baseline)) %>% 
+  rename(v1 = retail_and_recreation_percent_change_from_baseline,
+         v2 = grocery_and_pharmacy_percent_change_from_baseline,
+         v3 = parks_percent_change_from_baseline,
+         v4 = transit_stations_percent_change_from_baseline,
+         v5 = workplaces_percent_change_from_baseline,
+         v6 = residential_percent_change_from_baseline)
+
+# Appending Summaries to spatial polygons of the counties
+mobilityreport_spatial <- mobilityreport_montana %>% 
+  left_join(county_boundaries) %>% st_as_sf(sf_column_name = "geometry")
+
+# Export Shapefile
+st_write(mobilityreport_spatial,
+          "1.Data/data_clean/montana_mobilityreport/montana_mobilityreport.shp",
+         append = F)
+
+# Export Key to shapefile
+data.frame(key = c("v1","v2","v3","v4","v5","v6"),
+           variable = c("retail_and_recreation_percent_change_from_baseline",
+                        "grocery_and_pharmacy_percent_change_from_baseline",
+                        "parks_percent_change_from_baseline",
+                        "transit_stations_percent_change_from_baseline",
+                        "workplaces_percent_change_from_baseline",
+                        "residential_percent_change_from_baseline")) %>% 
+  write_csv(file = "1.Data/data_clean/montana_mobilityreport/key_montana_mobilityreport.csv")
+
+###############################################################################
+
