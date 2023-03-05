@@ -392,4 +392,3 @@ data.frame(key = c("v1","v2","v3","v4","v5","v6"),
   write_csv(file = "1.Data/data_clean/montana_mobilityreport/key_montana_mobilityreport.csv")
 
 ###############################################################################
-
