@@ -14,6 +14,9 @@
 library(sf)
 library(mapview)
 library(tidyverse)
+library(terra)
+library(foreach)
+library(raster)
 
 #      Functions                                                            ####
 
@@ -390,5 +393,51 @@ data.frame(key = c("v1","v2","v3","v4","v5","v6"),
                         "workplaces_percent_change_from_baseline",
                         "residential_percent_change_from_baseline")) %>% 
   write_csv(file = "1.Data/data_clean/montana_mobilityreport/key_montana_mobilityreport.csv")
+
+###############################################################################
+#   [Global Surface Water]                                                  ####
+
+# List of raw data
+layers <- list.files("D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_raw/GlobalSurfaceWater",
+                     full.names = T,
+                     pattern = ".tif")
+
+# Montana Polygon
+montana_boundary <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp")
+
+# Variable type
+data_type <- c("change",
+               "extent",
+               "occurrence",
+               "recurrence",
+               "seasonality",
+               "transitions")
+
+# Protocol
+foreach(i = 1:length(data_type),
+        .combine = rbind, 
+        .errorhandling = "pass") %do% {
+          
+          # Isolating variable tiles
+          tiles <- layers %>% 
+            str_subset(pattern = data_type[[i]]) %>% 
+            lapply(rast)
+          
+          # Mosaic
+          mos <- mosaic(tiles[[1]],tiles[[2]],fun="mean")
+          
+          # Cropping and Masking raster to Montana boundary
+          raster_clean <- mos %>% 
+            crop(montana_boundary) %>% 
+            mask(montana_boundary)
+          
+          # Export
+          writeRaster(raster_clean,
+                      filename = paste0("1.Data/data_clean/global_surface_water/",
+                                        data_type[[i]],"_gsw_2021",".tif"),
+                      overwrite = T)
+          
+          return(i)
+        }
 
 ###############################################################################
