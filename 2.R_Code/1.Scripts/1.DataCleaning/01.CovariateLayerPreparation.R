@@ -441,3 +441,12 @@ foreach(i = 1:length(data_type),
         }
 
 ###############################################################################
+#   [Fishing Access]                                                        ####
+
+fish_access_polygons <- st_read("D:\\Drive\\Research\\CPHR\\CPHR_Workspace\\1.Data\\data_raw\\FishingAccess\\Fishing_Access_Sites_-_Polygons.shp") %>% 
+  st_write("1.Data/data_clean/fishing_access/fish_access_polygons.shp")
+
+fish_access_points <- st_read("D:\\Drive\\Research\\CPHR\\CPHR_Workspace\\1.Data\\data_raw\\FishingAccess\\Fishing_Access_Sites_-_Points.shp") %>% 
+  st_write("1.Data/data_clean/fishing_access/fish_access_points.shp")
+
+###############################################################################
