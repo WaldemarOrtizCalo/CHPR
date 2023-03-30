@@ -38,7 +38,9 @@ for (i in 1:length(filenames)) {
     str_subset(pattern = filenames[[i]])
   
   zip(zipfile = paste0("1.Data/data_clean/gap_clean_NEAR_zip/",filenames[[i]],".zip"),
-      files = files_fps)
+      files = files_fps,
+      include_directories = F,
+      mode = "cherry-pick")
   
   print(paste(i, "out of", length(filenames)))
 }
