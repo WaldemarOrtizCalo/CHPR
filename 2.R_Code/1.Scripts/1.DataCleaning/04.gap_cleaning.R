@@ -460,7 +460,9 @@ gap_completed <- list.files("1.Data/data_clean/gap_clean",
   str_remove("gapclean_") %>% 
   str_remove(".shp")
 
-gap_incompleted <- setdiff(county_list,gap_completed)
+gap_incompleted <- setdiff(county_list,gap_completed) %>% 
+  str_replace(pattern = "Lewis and Clark",
+              replacement = "Lewis & Clark")
 
 #      Cleaning Protocol                                                    ####
 

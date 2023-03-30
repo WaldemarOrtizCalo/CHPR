@@ -2,7 +2,7 @@
 
 # Author: Waldemar Ortiz-Calo
 
-# Date:2023-03-08 
+# Date:2023-03-30 
 
 # Purpose: 
 
@@ -12,47 +12,38 @@
 #      Library                                                              ####
 library(sf)
 library(tidyverse)
-library(readxl)
+library(zip)
 
 #      Functions                                                            ####
 
 #      Data                                                                 ####
-gap_data <- list.files("D:/Drive/Research/CPHR/CPHR_Workspace/1.Data/data_clean/gap_clean",
-                       full.names = T,
-                       pattern = "GAP_clean_all.shp") %>% st_read()
+fps <- list.files("1.Data/data_clean/gap_clean",
+                  full.names = T)
 
-key_splitting_gapclean <- read_excel("1.Data/data_clean/gap_clean/key_splitting_gapclean.xlsx") %>% 
-  rename(divisions = Divisions) %>% 
-  mutate(divisions = round(divisions)) %>% 
-  mutate(divisions = ifelse(divisions == 0, 1 ,divisions))
+filenames <- list.files("1.Data/data_clean/gap_clean",
+                        full.names = F) %>% 
+  str_remove(".dbf")%>% 
+  str_remove(".prj")%>% 
+  str_remove(".shp")%>% 
+  str_remove(".shx") %>% 
+  str_subset("GAP_clean_all", negate = T) %>% 
+  unique()
   
-
-# Montana Country Polygons
-county_boundaries <- st_read("1.Data/data_clean/MontanaBoundaries/MontanaCountyBoundaries.shp") %>% 
-  rename(county = NAME)
-
-###############################################################################
-#   Summary of Data                                                         ####
-summary_stats <- gap_data %>% 
-  st_drop_geometry() %>% 
-  group_by(county) %>% 
-  summarize(n_poly = n(),
-            area = sum(ar_hctr))
-
 ###############################################################################
 
-gap_division <- gap_data %>% 
-  left_join(key_splitting_gapclean)
 
-county_names <- gap_division$county %>% unique()
-i <- 1 
+for (i in 1:length(filenames)) {
+  
+  files_fps <- fps %>% 
+    str_subset(pattern = filenames[[i]])
+  
+  zip(zipfile = paste0("1.Data/data_clean/gap_clean_NEAR_zip/",filenames[[i]],".zip"),
+      files = files_fps)
+  
+  print(paste(i, "out of", length(filenames)))
+}
 
-county_name <- county_names[[i]]
-
-county_sub <- gap_division %>% 
-  filter(county == county_name)
-
-divisions <- unique(county_sub$divisions)
+###############################################################################
 
 
 
