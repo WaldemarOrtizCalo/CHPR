@@ -72,7 +72,7 @@ ras <- fasterize(gap_sub,
 writeRaster(ras,
             paste0("1.Data/data_clean/gap_clean_rasters/",
                    "gapclean_raster_status_",
-                   "native_american",
+                   "tribal",
                    ".tif"),
             overwrite = T)
 
