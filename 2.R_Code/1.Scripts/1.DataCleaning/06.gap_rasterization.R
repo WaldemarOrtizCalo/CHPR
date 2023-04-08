@@ -55,3 +55,25 @@ for (i in 1:length(GAP_Sts_list)) {
 }
 
 ###############################################################################
+#   Rasterization - Native Land                                             ####
+# List of GAP statuses
+land_designation <- "Native American Land Area"
+
+# Subsetting Gap statuses
+gap_sub <- gap_clean %>% 
+  filter(d_Ds_Tp == land_designation)
+
+# Rasterization
+ras <- fasterize(gap_sub,
+                 raster_template) %>% 
+  rast()
+
+# Export
+writeRaster(ras,
+            paste0("1.Data/data_clean/gap_clean_rasters/",
+                   "gapclean_raster_status_",
+                   "native_american",
+                   ".tif"),
+            overwrite = T)
+
+###############################################################################
