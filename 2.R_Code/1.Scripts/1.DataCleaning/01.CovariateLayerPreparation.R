@@ -451,3 +451,17 @@ fish_access_points <- st_read("D:\\Drive\\Research\\CPHR\\CPHR_Workspace\\1.Data
   st_write("1.Data/data_clean/fishing_access/fish_access_points.shp")
 
 ###############################################################################
+#   OSM data trial                                                          ####
+
+library(osmdata)
+library(geofabrik)
+
+region <- get_osm("Montana",
+                  type = "shp",
+                  file = "D:/Drive/Work/CPHR/CPHR_Workspace/1.Data/data_raw/OpenStreetMap/MT")
+
+
+trails <- st_read("1.Data\\data_raw\\OpenStreetMap\\gis_osm_roads_free_1.shp") %>% 
+  filter(code == 5154)
+
+###############################################################################
