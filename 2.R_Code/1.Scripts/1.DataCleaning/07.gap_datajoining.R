@@ -11,6 +11,8 @@
 
 #      Library                                                              ####
 library(readr)
+library(sf)
+library(tidyverse)
 
 #      Functions                                                            ####
 
@@ -108,6 +110,7 @@ for (i in 1:length(tsv_list)) {
             append = F)
   
   print(paste0(i, " out of ", length(tsv_list), " completed"))
+  
 }
 
 ###############################################################################
@@ -148,14 +151,49 @@ vc_df <- list.files("1.Data/data_clean/NEAR_VISTA_data_unzipped",
   lapply(rename,plygnID = "Polygon ID") %>% 
   bind_rows()
 
-
 #      Creating Spatial Layer                                               ####
 #           Median Distance to Polygons                                     ####
 
 # Calculating Median Distance
 dist_traveled <- cel_df %>% 
+  rename(evening_dist = `Common Evening Distance Mi`) %>% 
   group_by(plygnID) %>% 
-  summarize(median_dist = stats::median(.$`Common Evening Distance Mi`,
+  summarize(median_dist = stats::median(evening_dist,
                                         na.rm = T))
+
+#           Avg Number of Visits per Visitor                                ####
+
+avg_visits_pervisit <- cel_df %>% 
+  group_by(plygnID) %>% 
+  summarize(avg_visits = mean(Visits, na.rm = T),
+            sd_avgvisits = sd(Visits, na.rm = T))
+
+gap_avgvisits <- left_join(x = gap_data,
+                           y = avg_visits_pervisit,
+                           by = "plygnID")
+
+#           Total Visits                                                    ####
+
+total_visits <- vc_df %>% 
+  rename(unique_visitors = `Unique Visitor Count`,
+         visit_total = `Visits Count`)
+
+#           NEAR VISTA Gap Data                                             ####
+
+gap_nearvista <- left_join(x = gap_data,
+                           y = dist_traveled,
+                           by = "plygnID") %>% 
+  left_join(y = avg_visits_pervisit, by = "plygnID") %>%
+  left_join(y = total_visits, by = "plygnID") %>% 
+  select(-c("SHAPE_A","SHAPE_L",
+            "SQMILES",
+            "PERIMET",
+            "ACRES",
+            "WDPA_Cd"))
+
+# Export
+st_write(gap_nearvista,
+         "1.Data/data_clean/gap_clean_nearvista/gap_nearvista.shp",
+         append = F)
 
 ###############################################################################
