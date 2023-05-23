@@ -451,17 +451,28 @@ fish_access_points <- st_read("D:\\Drive\\Research\\CPHR\\CPHR_Workspace\\1.Data
   st_write("1.Data/data_clean/fishing_access/fish_access_points.shp")
 
 ###############################################################################
-#   OSM data trial                                                          ####
+#   [Parkserve - Trail]                                                     ####
 
-library(osmdata)
-library(geofabrik)
-
-region <- get_osm("Montana",
-                  type = "shp",
-                  file = "D:/Drive/Work/CPHR/CPHR_Workspace/1.Data/data_raw/OpenStreetMap/MT")
+#      [Importing Boundary Layers]                                          ####
 
 
-trails <- st_read("1.Data\\data_raw\\OpenStreetMap\\gis_osm_roads_free_1.shp") %>% 
-  filter(code == 5154)
+mt_boundary <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp")
+trails <- st_read("1.Data\\data_raw\\Parkserve_v2\\ParkServe_TrailAmenities.shp")
+
+mt_boundary_reproj <- st_transform(mt_boundary,
+                                   crs = st_crs(trails))
+
+print(Sys.time())
+
+intersection <- st_intersection(trails,
+                                mt_boundary_reproj) %>% 
+  st_transform(4326)
+
+print(Sys.time())
+
+strail <- intersection %>% 
+  slice_head(n=100)
+
+mapview(strail)
 
 ###############################################################################
