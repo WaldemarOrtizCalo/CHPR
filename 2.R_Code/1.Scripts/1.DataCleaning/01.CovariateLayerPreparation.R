@@ -17,6 +17,8 @@ library(tidyverse)
 library(terra)
 library(foreach)
 library(raster)
+library(starsExtra)
+library(whitebox)
 
 #      Functions                                                            ####
 
@@ -453,26 +455,93 @@ fish_access_points <- st_read("D:\\Drive\\Research\\CPHR\\CPHR_Workspace\\1.Data
 ###############################################################################
 #   [Parkserve - Trail]                                                     ####
 
-#      [Importing Boundary Layers]                                          ####
+#      [Importing Layers and Cleaning]                                      ####
 
+# Parkserve - Trails
+trails <- st_read("1.Data\\data_raw\\Parkserve\\ParkServe_TrailAmenities.shp") %>% 
+  st_transform(5070)
 
-mt_boundary <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp")
-trails <- st_read("1.Data\\data_raw\\Parkserve_v2\\ParkServe_TrailAmenities.shp")
+# Parkserve - Park Areas
+parks <- st_read("1.Data\\data_raw\\Parkserve\\ParkServe_Parks.shp") %>% 
+  st_transform(5070)
 
-mt_boundary_reproj <- st_transform(mt_boundary,
-                                   crs = st_crs(trails))
+# Parkserve - Playgrounds Areas
+playgrounds <- st_read("1.Data\\data_raw\\Parkserve\\ParkServe_PlaygroundAmenities.shp") %>% 
+  st_transform(5070)
 
-print(Sys.time())
+# Montana Boundary 
+mt_boundary <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp") %>% 
+  st_transform(5070)
 
-intersection <- st_intersection(trails,
-                                mt_boundary_reproj) %>% 
-  st_transform(4326)
+#      [Clipping Layers to Boundary]                                        ####
 
-print(Sys.time())
+# Clipped Trails
+mt_trails <- st_intersection(trails,
+                             mt_boundary)
 
-strail <- intersection %>% 
-  slice_head(n=100)
+st_write(st_transform(mt_trails,4326),
+         "1.Data/data_clean/Parkserve/mt_trails.shp",
+         append = F)
 
-mapview(strail)
+# Clipped Parks
+mt_parks <- st_intersection(parks,
+                            mt_boundary)
 
+st_write(st_transform(mt_parks,4326),
+         "1.Data/data_clean/Parkserve/mt_parks.shp",
+         append = F)
+
+# Clipped Playgrounds
+mt_playgrounds <- st_intersection(playgrounds,
+                                  mt_boundary)
+
+st_write(st_transform(mt_playgrounds,4326),
+         "1.Data/data_clean/Parkserve/mt_playgrounds.shp",
+         append = F)
+
+#      [Distance to Trails]                                                 ####
+
+# NDVI Layer as template
+raster_template <- rast("1.Data\\data_clean\\NDVI_summaries\\summaries_seasonal\\ndvi_avg_fall_2007_250m.tif") %>% 
+  project("EPSG:5070")
+
+# Collating Trails into One Layer
+trails <- mt_trails %>% 
+  summarize()
+
+# Making the layer a SpatVector
+trails_spatvect <- vect(trails)
+
+# Rasterizing Trails
+trails_raster <- rasterize(trails_spatvect,
+                           raster_template,
+                           touches = T)
+
+trails_raster[is.na(trails_raster)] <- 0
+
+# Exporting Trails
+writeRaster(trails_raster,
+            "1.Data/data_clean/Parkserve/mt_trails_raster.tif",
+            overwrite = T)
+
+# Calculating Distance Raster
+wbt_euclidean_distance(
+  i = "1.Data/data_clean/Parkserve/mt_trails_raster.tif", 
+  output = "1.Data/data_clean/Parkserve/mt_dist2trails_raster.tif")
+
+# Reprojecting Data
+drast <- rast("1.Data/data_clean/Parkserve/mt_dist2trails_raster.tif") %>% 
+  project("EPSG:4326")
+
+writeRaster(drast,
+            "1.Data/data_clean/Parkserve/mt_dist2trails_clippedraster.tif",
+            overwrite = T)
+
+drast_clipped <- rast("1.Data/data_clean/Parkserve/mt_dist2trails_raster.tif") %>% 
+  mask(mt_boundary) %>% 
+  project("EPSG:4326")
+
+writeRaster(drast_clipped,
+            "1.Data/data_clean/Parkserve/mt_dist2trails_clippedraster.tif",
+            overwrite = T)
 ###############################################################################
