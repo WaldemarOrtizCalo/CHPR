@@ -453,7 +453,7 @@ fish_access_points <- st_read("D:\\Drive\\Research\\CPHR\\CPHR_Workspace\\1.Data
   st_write("1.Data/data_clean/fishing_access/fish_access_points.shp")
 
 ###############################################################################
-#   [Parkserve - Trail]                                                     ####
+#   [Parkserve - Layers]                                                    ####
 
 #      [Importing Layers and Cleaning]                                      ####
 
@@ -544,4 +544,89 @@ drast_clipped <- rast("1.Data/data_clean/Parkserve/mt_dist2trails_raster.tif") %
 writeRaster(drast_clipped,
             "1.Data/data_clean/Parkserve/mt_dist2trails_clippedraster.tif",
             overwrite = T)
+
+#      [Distance to Parks]                                                  ####
+
+# Collating Parks into One Layer
+parks <- mt_parks %>% 
+  summarize()
+
+# Making the layer a SpatVector
+parks_spatvect <- vect(parks)
+
+# Rasterizing Parks
+parks_raster <- rasterize(parks_spatvect,
+                          raster_template,
+                          touches = T)
+
+parks_raster[is.na(parks_raster)] <- 0
+
+# Exporting Parks
+writeRaster(parks_raster,
+            "1.Data/data_clean/Parkserve/mt_parks_raster.tif",
+            overwrite = T)
+
+# Calculating Distance Raster
+wbt_euclidean_distance(
+  i = "1.Data/data_clean/Parkserve/mt_parks_raster.tif", 
+  output = "1.Data/data_clean/Parkserve/mt_dist2parks_raster.tif")
+
+# Reprojecting Data
+drast <- rast("1.Data/data_clean/Parkserve/mt_dist2parks_raster.tif") %>% 
+  project("EPSG:4326")
+
+writeRaster(drast,
+            "1.Data/data_clean/Parkserve/mt_dist2parks_clippedraster.tif",
+            overwrite = T)
+
+drast_clipped <- rast("1.Data/data_clean/Parkserve/mt_dist2parks_raster.tif") %>% 
+  mask(mt_boundary) %>% 
+  project("EPSG:4326")
+
+writeRaster(drast_clipped,
+            "1.Data/data_clean/Parkserve/mt_dist2parks_clippedraster.tif",
+            overwrite = T)
+
+#      [Distance to Playgrounds]                                            ####
+
+# Collating Playgrounds into One Layer
+playgrounds <- mt_playgrounds %>% 
+  summarize()
+
+# Making the Playgrounds layer a SpatVector
+playgrounds_spatvect <- vect(playgrounds)
+
+# Rasterizing Playgrounds
+playgrounds_raster <- rasterize(playgrounds_spatvect,
+                                raster_template,
+                                touches = T)
+
+playgrounds_raster[is.na(playgrounds_raster)] <- 0
+
+# Exporting Playgrounds
+writeRaster(playgrounds_raster,
+            "1.Data/data_clean/Parkserve/mt_playgrounds_raster.tif",
+            overwrite = T)
+
+# Calculating Distance Raster
+wbt_euclidean_distance(
+  i = "1.Data/data_clean/Parkserve/mt_playgrounds_raster.tif", 
+  output = "1.Data/data_clean/Parkserve/mt_dist2playgrounds_raster.tif")
+
+# Reprojecting Data
+drast <- rast("1.Data/data_clean/Parkserve/mt_dist2playgrounds_raster.tif") %>% 
+  project("EPSG:4326")
+
+writeRaster(drast,
+            "1.Data/data_clean/Parkserve/mt_dist2playgrounds_clippedraster.tif",
+            overwrite = T)
+
+drast_clipped <- rast("1.Data/data_clean/Parkserve/mt_dist2playgrounds_raster.tif") %>% 
+  mask(mt_boundary) %>% 
+  project("EPSG:4326")
+
+writeRaster(drast_clipped,
+            "1.Data/data_clean/Parkserve/mt_dist2playgrounds_clippedraster.tif",
+            overwrite = T)
+
 ###############################################################################
