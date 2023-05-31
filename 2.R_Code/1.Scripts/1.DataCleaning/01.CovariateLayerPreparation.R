@@ -630,3 +630,25 @@ writeRaster(drast_clipped,
             overwrite = T)
 
 ###############################################################################
+#   [Fishing and Birdwatching Recreation]                                   ####
+
+# Importing Layer and renaming columns
+# Note: Cleaning was done in QGIS
+layer <- st_read("D:\\Drive\\Work\\CPHR\\CPHR_Workspace\\1.Data\\data_raw\\Recreation_Bird_Fishing\\recreation_bird_fishing.shp") %>% 
+  rename(bw_recdays = "a00000014",
+         ff_recdays = "a00000024") 
+
+# Montana Boundary 
+mt_boundary <- st_read("1.Data\\data_clean\\MontanaBoundaries\\MontanaCountyBoundaries.shp") %>% 
+  st_transform(st_crs(layer))
+
+# Clipping
+clipped_layer <- st_intersection(layer,
+                                 mt_boundary) %>% 
+  st_transform(4326)
+
+# Export
+st_write(clipped_layer,
+         "D:/Drive/Work/CPHR/CPHR_Workspace/1.Data/data_clean/Recreation_bird_fishing/layer_bw_ff.shp",
+         append = F)
+###############################################################################
