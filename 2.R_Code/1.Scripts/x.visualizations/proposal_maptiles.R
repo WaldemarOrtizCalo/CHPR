@@ -17,22 +17,6 @@ library(tidyverse)
 library(tidyterra)
 
 #      Functions                                                            ####
-LCcodes <- unique(nlcd)
-
-color_codes <- c('#5475a8'
-                 ,'#ffffff','#e8d1d1'
-                 ,'#e29e8c','#ff0000'
-                 ,'#b50000','#d2cdc0'
-                 ,'#85c77e','#38814e'
-                 ,'#d4e7b0','#dcca8f'
-                 ,'#e2e2c1','#fbf65d'
-                 ,'#ca9146','#c8e6f8'
-                 ,'#64b3d5')
-
-color_codes_df <- data.frame(
-  land_cover = unique(nlcd)[,1],
-  hex_codes = color_codes
-)
 
 #      Data                                                                 ####
 
@@ -76,7 +60,25 @@ playgrounds_rast <- rast("1.Data\\data_clean\\Parkserve\\mt_dist2playgrounds_cli
 rec_birdwatch_fishing <- st_read("1.Data\\data_clean\\Recreation_bird_fishing\\layer_bw_ff.shp")%>% 
   st_intersection(missoula_boundary)
 
+LCcodes <- unique(nlcd)
+
+color_codes <- c('#5475a8'
+                 ,'#ffffff','#e8d1d1'
+                 ,'#e29e8c','#ff0000'
+                 ,'#b50000','#d2cdc0'
+                 ,'#85c77e','#38814e'
+                 ,'#d4e7b0','#dcca8f'
+                 ,'#e2e2c1','#fbf65d'
+                 ,'#ca9146','#c8e6f8'
+                 ,'#64b3d5')
+
+color_codes_df <- data.frame(
+  land_cover = unique(nlcd)[,1],
+  hex_codes = color_codes
+)
+
 ###############################################################################
+#   Visualizations without Legends                                          ####
 #   Missoula Boundary                                                       ####
 
 map <- ggplot(missoula_boundary)+
@@ -312,6 +314,246 @@ map <- ggplot()+
   scale_fill_gradient(low = "yellow", high = "red", na.value = NA)
 
 ggsave(filename = "3.Outputs/proposal_maps/dist2playgrounds.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+###############################################################################
+#   Visualizations with Legends                                             ####
+#   GAP_status                                                              ####
+map <- ggplot(gap)+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(aes(fill = GAP_Sts))+
+  theme_void()+
+  scale_fill_discrete(name = "Gap Status")
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_gap_status.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   NEAR VISTA - Total Visits                                               ####
+
+map <- ggplot(gap)+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(aes(fill = vst_ttl))+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", na.value = NA,
+                      name = "Total Visits", labels = comma)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_nearvista_totalvisits.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   NEAR VISTA - Avg Visits per visitor                                     ####
+
+map <- ggplot(gap)+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(aes(fill = avg_vst))+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                      na.value = NA,
+                      name = "Avg Number of Visits", 
+                      labels = comma)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_nearvista_avgvisits.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   NEAR VISTA - Median Distance Traveled                                   ####
+
+map <- ggplot(gap)+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(aes(fill = mdn_dst))+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                      na.value = NA,
+                      name = "Median Distance Traveled", 
+                      labels = comma)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_nearvista_mediandist.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   RecDays - Birdwatching                                                  ####
+
+map <- ggplot(rec_birdwatch_fishing)+
+  geom_sf(aes(fill = bw_recdays))+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                    na.value = NA,
+                    name = "Rec Days: Birdwatching", 
+                    labels = comma)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_bw_recdays.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   RecDays - Fishing                                                       ####
+
+map <- ggplot(rec_birdwatch_fishing)+
+  geom_sf(aes(fill = ff_recdays))+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                      na.value = NA,
+                      name = "Rec Days: Fishing", 
+                      labels = comma)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_ff_recdays.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   NLCD                                                                    ####
+
+map <- ggplot()+
+  geom_spatraster(data = nlcd,na.rm = T)+
+  theme_void()+
+  scale_fill_discrete(na.value = NA)+
+  scale_fill_manual(name = "Land cover",
+                    values = color_codes_df$hex_codes,
+                    labels = color_codes_df$land_cover,
+                    na.translate = FALSE) 
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_nlcd.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   NDVI                                                                    ####
+
+map <- ggplot()+
+  geom_spatraster(data = ndvi,na.rm = T)+
+  theme_void()+
+  scale_fill_gradientn(colours = terrain.colors(7,rev = T),
+                       na.value = NA,
+                       name = "NDVI")
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_ndvi.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   Parkserve - Trails                                                      ####
+
+map <- ggplot()+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(data = trails_shp)+
+  theme_void()+
+  theme(legend.position = "none") 
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_trails.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+map <- ggplot()+
+  geom_spatraster(data = trails_rast,na.rm = T)+
+  geom_sf(data = trails_shp)+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                      name = "Distance to Trail (m)",
+                      na.value = NA)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_dist2trails.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   Parkserve - Parks                                                       ####
+
+map <- ggplot()+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(data = parks_shp,aes(fill = Park_Desig))+
+  theme_void()+
+  theme(legend.position = "none") 
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_parks.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+map <- ggplot()+
+  geom_spatraster(data = parks_rast,na.rm = T)+
+  geom_sf(data = parks_shp)+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                      name = "Distance to Parks (m)",
+                      na.value = NA)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_dist2parks.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+#   Parkserve - Playground                                                  ####
+
+map <- ggplot()+
+  geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
+  geom_sf(data = playgrounds_shp)+
+  theme_void()+
+  theme(legend.position = "none") 
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_playgrounds.png",
+       plot = map,
+       device = "png",
+       dpi = 1200,
+       width = 12,
+       height = 6, 
+       units = "in")
+
+map <- ggplot()+
+  geom_spatraster(data = playgrounds_rast,na.rm = T)+
+  geom_sf(data = playgrounds_shp)+
+  theme_void()+
+  scale_fill_gradient(low = "yellow", high = "red", 
+                      name = "Distance to Playgrounds (m)",
+                      na.value = NA)
+
+ggsave(filename = "3.Outputs/proposal_maps/legend_dist2playgrounds.png",
        plot = map,
        device = "png",
        dpi = 1200,
