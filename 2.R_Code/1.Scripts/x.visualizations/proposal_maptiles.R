@@ -15,6 +15,7 @@ library(sf)
 library(mapview)
 library(tidyverse)
 library(tidyterra)
+library(scales)
 
 #      Functions                                                            ####
 
@@ -33,8 +34,16 @@ ndvi <- rast("1.Data\\data_clean\\NDVI_summaries\\summaries_yearly\\ndvi_avg_yr_
   crop(missoula_boundary) %>% 
   mask(missoula_boundary)
 
-gap <- st_read("1.Data\\data_clean\\gap_clean_nearvista\\gap_nearvista.shp") %>% 
+gap_raw <- st_read("1.Data\\data_clean\\gap_clean_nearvista\\gap_nearvista.shp") %>% 
   st_intersection(missoula_boundary)
+
+removal_df <- st_collection_extract(gap_raw,
+                                    type = c("POLYGON")) %>% 
+  mutate(filter_area = as.numeric(st_area(.))) %>% 
+  filter(filter_area > 1)
+
+gap <- gap_raw %>% 
+  filter(plygnID %in% removal_df$plygnID)
 
 parks_shp <- st_read("1.Data\\data_clean\\Parkserve\\mt_parks.shp") %>% 
   st_intersection(missoula_boundary)
@@ -292,9 +301,14 @@ ggsave(filename = "3.Outputs/proposal_maps/dist2parks.png",
 
 #   Parkserve - Playground                                                  ####
 
+playground_centroids <- playgrounds_shp %>% 
+  st_transform(5070) %>% 
+  st_centroid()%>% 
+  st_transform(4326)
+
 map <- ggplot()+
   geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
-  geom_sf(data = playgrounds_shp)+
+  geom_sf(data = playground_centroids)+
   theme_void()+
   theme(legend.position = "none") 
 
@@ -308,7 +322,7 @@ ggsave(filename = "3.Outputs/proposal_maps/playgrounds.png",
 
 map <- ggplot()+
   geom_spatraster(data = playgrounds_rast,na.rm = T)+
-  geom_sf(data = playgrounds_shp)+
+  geom_sf(data = playground_centroids)+
   theme_void()+
   theme(legend.position = "none") +
   scale_fill_gradient(low = "yellow", high = "red", na.value = NA)
@@ -533,7 +547,7 @@ ggsave(filename = "3.Outputs/proposal_maps/legend_dist2parks.png",
 
 map <- ggplot()+
   geom_sf(data = missoula_boundary,fill = "gray50",alpha = 0.6)+
-  geom_sf(data = playgrounds_shp)+
+  geom_sf(data = playground_centroids)+
   theme_void()+
   theme(legend.position = "none") 
 
@@ -547,7 +561,7 @@ ggsave(filename = "3.Outputs/proposal_maps/legend_playgrounds.png",
 
 map <- ggplot()+
   geom_spatraster(data = playgrounds_rast,na.rm = T)+
-  geom_sf(data = playgrounds_shp)+
+  geom_sf(data = playground_centroids)+
   theme_void()+
   scale_fill_gradient(low = "yellow", high = "red", 
                       name = "Distance to Playgrounds (m)",
